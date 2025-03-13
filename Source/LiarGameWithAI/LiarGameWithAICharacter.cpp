@@ -10,7 +10,11 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "Game/LiarGameState.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/WidgetComponent.h"
+#include "GameFramework/PlayerState.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -56,6 +60,8 @@ ALiarGameWithAICharacter::ALiarGameWithAICharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	GamePlayerName = CreateDefaultSubobject<UWidgetComponent>(TEXT("GamePlayerName"));
+	GamePlayerName->SetupAttachment(RootComponent);
 	
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -79,6 +85,22 @@ void ALiarGameWithAICharacter::NotifyControllerChanged()
 	}
 }
 
+void ALiarGameWithAICharacter::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void ALiarGameWithAICharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	SetWidgetNameRot();
+	// if (GetWorld()->GetFirstPlayerController()->WasInputKeyJustPressed(EKeys::R))
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::Tick"));
+	// }
+}
+
 void ALiarGameWithAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
@@ -98,6 +120,33 @@ void ALiarGameWithAICharacter::SetupPlayerInputComponent(UInputComponent* Player
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
+}
+
+void ALiarGameWithAICharacter::SetWidgetNameRot()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	int32 PlayerIndex = UGameplayStatics::GetPlayerControllerID(PlayerController);
+	if (PlayerIndex < 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid PlayerIndex: %d"), PlayerIndex);
+		return;
+	}
+	// PlayerIndex 번째 플레이어의 카메라 가져오기
+	APlayerCameraManager* CamManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	if (!CamManager)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CameraManager is nullptr for PlayerIndex: %d"), 0);
+		return;
+	}
+	// APlayerController* Character =Cast<APlayerController>(this->GetController()); 
+	// int32 Index = Character->NetPlayerIndex;
+	
+	AActor* cam = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	// 카메라의 앞방향(반대), 윗방향을 이용해서 Rotator 를 구하자.
+	FRotator rot = UKismetMathLibrary::MakeRotFromXZ(-cam->GetActorForwardVector(), cam->GetActorUpVector());
+	// compHP 를 구한  Rotator 값으로 설정.
+	GamePlayerName->SetWorldRotation(rot);
+	// UE_LOG(LogTemp,Warning,TEXT("PlayerIndex%d"),Index);
 }
 
 void ALiarGameWithAICharacter::Move(const FInputActionValue& Value)
