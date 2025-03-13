@@ -24,6 +24,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<AActor*> TeleportPoints;
 
+	UPROPERTY()
+	TArray<class AChair*> Chairs;
 
 protected:
 	virtual void BeginPlay() override;

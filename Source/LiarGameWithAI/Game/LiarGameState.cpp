@@ -3,12 +3,21 @@
 
 #include "LiarGameState.h"
 
+#include "EngineUtils.h"
+#include "LiarGameWithAI/Chair.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 
 void ALiarGameState::BeginPlay()
 {
 	Super::BeginPlay();
+
+	for (TActorIterator<AChair> It(GetWorld()); It; ++It)
+	{
+		Chairs.Add(*It);
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("%d"), Chairs.Num());
 }
 
 void ALiarGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -46,6 +55,9 @@ void ALiarGameState::Multicast_InitPlayers_Implementation(const TArray<APlayerCo
 	for (int i = 0; i < PlayerList.Num(); i++)
 	{
 		PlayerList[i] = players[i];
+
+		players[i]->GetCharacter()->SetActorTransform(Chairs[i]->SitPosition->GetComponentTransform());
+		
 		// Players[i]->SetActorLocation(TeleportPoints[i]->GetActorLocation());
 		// Players[i]->SetActorRotation(TeleportPoints[i]->GetActorRotation());
 		//TODO: 플레이어 앉은 포즈 시작

@@ -24,7 +24,7 @@ void AChair::BeginPlay()
 	Super::BeginPlay();
 
 	// Test...
-	FActorSpawnParameters Params;
-	GetWorld()->SpawnActor<ALiarGameWithAICharacter>(PlayerFactory, SitPosition->GetComponentTransform(), Params);
+	// FActorSpawnParameters Params;
+	// GetWorld()->SpawnActor<ALiarGameWithAICharacter>(PlayerFactory, SitPosition->GetComponentTransform(), Params);
 }
 
