@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "LiarGameState.h"
@@ -63,7 +63,7 @@ void ALiarGameState::Multicast_GameStart_Implementation()
 
 void ALiarGameState::SortPlayer()
 {
-	UE_LOG(LogTemp,Warning,TEXT("플레이어 정렬"));
+	//UE_LOG(LogTemp,Warning,TEXT("플레이어 정렬"));
 	
 	PlayerList.Sort([](const FPlayerInfo& A, const FPlayerInfo& B)
 	{
