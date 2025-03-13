@@ -29,5 +29,11 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ALiarGameWithAICharacter> PlayerFactory;
+
+	FString UserId;
+	int32 Order;
+	bool IsLair;
+
+	void SpawnPlayer(FString userId, int32 order, bool isLair);
 	
 };

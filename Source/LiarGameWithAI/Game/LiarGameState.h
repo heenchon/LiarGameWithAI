@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LiarPlayerState.h"
 #include "GameFramework/GameState.h"
 #include "LiarGameState.generated.h"
 
@@ -16,14 +17,11 @@ class LIARGAMEWITHAI_API ALiarGameState : public AGameState
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(Replicated)
-	TArray<ALiarPlayerState*> PlayerList;
+	// UPROPERTY(Replicated)
+	TArray<FPlayerInfo> PlayerList;
 
-	UPROPERTY(Replicated)
-	ALiarPlayerState* LiarPlayer;
-	
-	UPROPERTY(Replicated)
-	TArray<AActor*> TeleportPoints;
+	// UPROPERTY(Replicated)
+	// ALiarPlayerState* LiarPlayer;
 
 	UPROPERTY()
 	TArray<class AChair*> Chairs;
@@ -35,9 +33,6 @@ protected:
 private:
 	UFUNCTION(NetMulticast, reliable)
 	void Multicast_GameStart();
-
-	UFUNCTION(NetMulticast, reliable)
-	void Multicast_InitPlayers(const TArray<APlayerController*>& players);
 
 	UFUNCTION()
 	void SortPlayer();

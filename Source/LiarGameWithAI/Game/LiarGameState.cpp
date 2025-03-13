@@ -26,9 +26,9 @@ void ALiarGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
-	DOREPLIFETIME(ALiarGameState, LiarPlayer);
-	DOREPLIFETIME(ALiarGameState, PlayerList);
-	DOREPLIFETIME(ALiarGameState, TeleportPoints);
+	// DOREPLIFETIME(ALiarGameState, LiarPlayer);
+	// DOREPLIFETIME(ALiarGameState, PlayerList);
+	// DOREPLIFETIME(ALiarGameState, TeleportPoints);
 }
 
 void ALiarGameState::LiarTest()
@@ -43,8 +43,19 @@ void ALiarGameState::LiarTest()
 
 void ALiarGameState::Multicast_GameStart_Implementation()
 {
-	TeleportPoints.SetNum(6);
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(),FName("Point"),TeleportPoints);
+	// 임시데이터
+
+	for (int32 i = 0; i < 6; i++)
+	{
+		FPlayerInfo info = 
+		{
+			.id = FString::Printf(TEXT("Test%d"), i),
+			.liar = i < 5,
+			.order = i + 1
+		};
+		
+		PlayerList.Add(info);
+	}
 	
 	SortPlayer();
 	InitPlayerInfo();
@@ -54,9 +65,9 @@ void ALiarGameState::SortPlayer()
 {
 	UE_LOG(LogTemp,Warning,TEXT("플레이어 정렬"));
 	
-	PlayerList.Sort([](const ALiarPlayerState& A, const ALiarPlayerState& B)
+	PlayerList.Sort([](const FPlayerInfo& A, const FPlayerInfo& B)
 	{
-		return A.GetPlayerId() < B.GetPlayerId();
+		return A.order < B.order;
 	});
 }
 
@@ -72,35 +83,20 @@ void ALiarGameState::InitPlayerInfo()
 		UE_LOG(LogTemp,Warning,TEXT("플레이어 있음"));
 	}
 
-	//TODO: 플레이어 Json 정보 받아서 정렬.
-
-	if (TeleportPoints.IsEmpty())
-	{
-		UE_LOG(LogTemp,Warning,TEXT("텔레포트 포인트 없음"));
-		return;
-	}
+	// //TODO: 플레이어 Json 정보 받아서 정렬.
+	//
+	// if (TeleportPoints.IsEmpty())
+	// {
+	// 	UE_LOG(LogTemp,Warning,TEXT("텔레포트 포인트 없음"));
+	// 	return;
+	// }
 
 	for (int i = 0; i < PlayerList.Num(); i++)
 	{
-		PlayerList[i]->GetPlayerController();
-		PlayerList[i]->GetPlayerController();
-	}
-}
+		// TODO: playerList 아이디가 자신의 아이디와 같다면 PlayerController의 Pawn을 의자에 앉히자.
 
-void ALiarGameState::Multicast_InitPlayers_Implementation(const TArray<APlayerController*>& players)
-{
-	PlayerList.SetNum(players.Num());
-	
-	for (int i = 0; i < PlayerList.Num(); i++)
-	{
-		PlayerList[i] = Cast<ALiarPlayerState>(players[i]->PlayerState);
+		FPlayerInfo info = PlayerList[i];
 		
-		PlayerList[i] = players[i];
-
-		players[i]->GetCharacter()->SetActorTransform(Chairs[i]->SitPosition->GetComponentTransform());
-		
-		// Players[i]->SetActorLocation(TeleportPoints[i]->GetActorLocation());
-		// Players[i]->SetActorRotation(TeleportPoints[i]->GetActorRotation());
-		//TODO: 플레이어 앉은 포즈 시작
+		Chairs[i]->SpawnPlayer(info.id, info.order, info.liar);
 	}
 }
