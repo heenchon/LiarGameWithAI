@@ -42,5 +42,4 @@ private:
 public:
 	UFUNCTION(Exec)
 	void LiarTest();
-	
 };
