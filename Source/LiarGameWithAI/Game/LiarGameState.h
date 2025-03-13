@@ -6,6 +6,7 @@
 #include "GameFramework/GameState.h"
 #include "LiarGameState.generated.h"
 
+class ALiarPlayerState;
 /**
  * 
  */
@@ -16,15 +17,13 @@ class LIARGAMEWITHAI_API ALiarGameState : public AGameState
 	
 public:
 	UPROPERTY(Replicated)
-	TArray<APlayerController*> PlayerList;
+	TArray<ALiarPlayerState*> PlayerList;
 
 	UPROPERTY(Replicated)
-	APlayerController* LiarPlayer;
+	ALiarPlayerState* LiarPlayer;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Replicated)
 	TArray<AActor*> TeleportPoints;
-
-	int PlayerNum;
 
 
 protected:
@@ -35,17 +34,12 @@ private:
 	UFUNCTION(NetMulticast, reliable)
 	void Multicast_GameStart();
 
-	UFUNCTION(NetMulticast, reliable)
-	void Multicast_InitPlayers(const TArray<APlayerController*>& players);
-	
-	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_ChooseLiar();
-
-	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_ShowKeyword();
-
+	UFUNCTION()
+	void SortPlayer();
+	UFUNCTION()
+	void InitPlayerInfo();
 	
 public:
 	UFUNCTION(Exec)
-	void Test();
+	void LiarTest();
 };

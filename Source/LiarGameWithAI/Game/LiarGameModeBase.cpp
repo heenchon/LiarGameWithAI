@@ -4,13 +4,12 @@
 #include "LiarGameModeBase.h"
 
 #include "LiarGameState.h"
-#include "LiarGameSystem.h"
-#include "Engine/TextureRenderTarget.h"
-#include "GameFramework/Character.h"
+#include "LiarPlayerState.h"
 
 ALiarGameModeBase::ALiarGameModeBase()
 {
 	GameStateClass = ALiarGameState::StaticClass();
+	PlayerStateClass = ALiarPlayerState::StaticClass();
 }
 
 void ALiarGameModeBase::PostLogin(APlayerController* NewPlayer)
@@ -18,9 +17,13 @@ void ALiarGameModeBase::PostLogin(APlayerController* NewPlayer)
 	Super::PostLogin(NewPlayer);
 	
 	ALiarGameState* MyGameState = GetGameState<ALiarGameState>();
-	if (MyGameState && NewPlayer)
+	if (MyGameState && NewPlayer && NewPlayer->PlayerState)
 	{
-		MyGameState->PlayerList.Add(NewPlayer);
+		ALiarPlayerState* LiarPS = Cast<ALiarPlayerState>(NewPlayer->PlayerState);
+		if(LiarPS)
+		{
+			MyGameState->PlayerList.Add(LiarPS);
+		}
 	}
 }
 
