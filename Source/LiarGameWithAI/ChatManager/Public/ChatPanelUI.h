@@ -14,7 +14,7 @@ class LIARGAMEWITHAI_API UChatPanelUI : public UUserWidget
 {
 	GENERATED_BODY()
 
-	/*public:
+	public:
 
 	UPROPERTY(meta = (BindWidget))
 	class UScrollBox* ChatScrollBox;
@@ -22,5 +22,8 @@ class LIARGAMEWITHAI_API UChatPanelUI : public UUserWidget
 	class UEditableTextBox* ChatInputBox;
 
 	virtual void NativeConstruct();
-	void UpdateChat(FText PlayerName, FText Chat);*/
+	void UpdateChat(FText PlayerName, FText Chat);
+
+	UFUNCTION()
+	void OnTextCommitted(const FText& InText, ETextCommit::Type CommitMethod);
 };

@@ -9,7 +9,7 @@
 
 
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FPlayerInfoArray
 {
 	GENERATED_BODY()

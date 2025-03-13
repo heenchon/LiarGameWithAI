@@ -9,8 +9,11 @@
   <component name="ChangeListManager">
     <list default="true" id="88c195c6-3cbb-46c0-a8c6-aa1f144c1d29" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/StartManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/StartManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPanelUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPanelUI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatPanelUI.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatPanelUI.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/StartManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/StartManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/LiarGameInfo.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/LiarGameInfo.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/LiarGameWithAI.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/LiarGameWithAI.Build.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +38,9 @@
     &quot;accountId&quot;: &quot;61337a0b-2c5b-42e8-957e-283165ff6781&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Intermediate/Build/Win64/UnrealEditor/Inc/LiarGameWithAI/UHT/LiarGameInfo.gen.cpp" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -149,6 +155,7 @@
       <workItem from="1741855071675" duration="2081000" />
       <workItem from="1741860332956" duration="7441000" />
       <workItem from="1741870088315" duration="186000" />
+      <workItem from="1741870327702" duration="978000" />
     </task>
     <servers />
   </component>

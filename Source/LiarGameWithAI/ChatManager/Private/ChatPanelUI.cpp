@@ -2,10 +2,9 @@
 
 
 #include "LiarGameWithAI/ChatManager/Public/ChatPanelUI.h"
-
+#include "Widgets/Text/ISlateEditableTextWidget.h"
 #include "Components/EditableTextBox.h"
 
-/*
 
 void UChatPanelUI::NativeConstruct()
 {
@@ -22,4 +21,8 @@ void UChatPanelUI::UpdateChat(FText PlayerName, FText Chat)
 {
 	
 }
-*/
+
+void UChatPanelUI::OnTextCommitted(const FText& InText, ETextCommit::Type CommitMethod)
+{
+	
+}
