@@ -34,9 +34,6 @@ private:
 	UFUNCTION(NetMulticast, reliable)
 	void Multicast_GameStart();
 
-	UFUNCTION(NetMulticast, reliable)
-	void Multicast_InitPlayers(const TArray<APlayerController*>& players);
-
 	UFUNCTION()
 	void SortPlayer();
 	UFUNCTION()
@@ -45,5 +42,4 @@ private:
 public:
 	UFUNCTION(Exec)
 	void LiarTest();
-	
 };

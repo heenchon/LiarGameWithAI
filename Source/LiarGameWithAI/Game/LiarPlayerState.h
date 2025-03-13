@@ -4,23 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+#include "LiarGameWithAI/LiarGameInfo.h"
 #include "LiarPlayerState.generated.h"
 
 /**
  * 
  */
-USTRUCT(BlueprintType)
-struct FPlayerInfo
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(visibleAnywhere)
-	FString id;
-	UPROPERTY(visibleAnywhere)
-	bool liar;
-	UPROPERTY(visibleAnywhere)
-	int32 order;
-};
+
 
 UCLASS()
 class LIARGAMEWITHAI_API ALiarPlayerState : public APlayerState
