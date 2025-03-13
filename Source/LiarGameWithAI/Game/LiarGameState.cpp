@@ -23,7 +23,7 @@ void ALiarGameState::Test()
 {
 	if (HasAuthority())
 	{
-		UE_LOG(LogTemp, Display, TEXT("서버 권한 잇음"));
+		UE_LOG(LogTemp, Warning, TEXT("서버 권한 잇음"));
 		Multicast_GameStart();
 	}
 }
@@ -31,7 +31,7 @@ void ALiarGameState::Test()
 void ALiarGameState::Multicast_GameStart_Implementation()
 {
 	Multicast_ChooseLiar();
-	Multicast_ShowKeyword();
+	//Multicast_ShowKeyword();
 }
 
 // void ALiarGameState::GameStart()
@@ -41,8 +41,7 @@ void ALiarGameState::Multicast_GameStart_Implementation()
 
 void ALiarGameState::Multicast_InitPlayers_Implementation(const TArray<APlayerController*>& players)
 {
-	PlayerNum = players.Num();
-	PlayerList.SetNum(PlayerNum);
+	PlayerList.SetNum(players.Num());
 	
 	for (int i = 0; i < PlayerList.Num(); i++)
 	{
@@ -55,7 +54,13 @@ void ALiarGameState::Multicast_InitPlayers_Implementation(const TArray<APlayerCo
 
 void ALiarGameState::Multicast_ChooseLiar_Implementation()
 {
-	int randPlayer = FMath::RandRange(0, PlayerNum - 1);
+	if (PlayerList.IsEmpty())
+	{
+		UE_LOG(LogTemp,Warning,TEXT("플레이어 리스트 Empty"));
+		return;
+	}
+	
+	int randPlayer = FMath::RandRange(0, PlayerList.Num() - 1);
 	LiarPlayer = PlayerList[randPlayer];
 }
 

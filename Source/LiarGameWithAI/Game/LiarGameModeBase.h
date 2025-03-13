@@ -18,9 +18,6 @@ class LIARGAMEWITHAI_API ALiarGameModeBase : public AGameModeBase
 
 public:
 	ALiarGameModeBase();
-	
-	UPROPERTY(EditAnywhere)
-	ALiarGameState* LiarGameState;
 
 private:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
