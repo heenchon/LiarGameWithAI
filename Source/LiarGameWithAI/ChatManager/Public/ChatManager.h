@@ -51,6 +51,7 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	void NetMulticast_SendChat(const FString& userId, const FString& chat);
 
-	// AI에게 채팅 내용 전달
-	void SendChatToAI(const FUserChatInfoArray& UserChatInfoArray);
+	// AI에게 채팅 내용 전달 (Json으로 바꾸자)
+	void SendChatToAI(const FString& userId, const FString& chat);
+
 };

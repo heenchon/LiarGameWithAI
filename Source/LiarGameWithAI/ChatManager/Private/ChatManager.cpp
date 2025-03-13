@@ -37,13 +37,11 @@ void AChatManager::ServerRPC_SendChat_Implementation(const FString& userId, cons
 	FUserChatInfo UserChatInfo;
 	UserChatInfo.userId = userId;
 	UserChatInfo.chat = chat;
-	FUserChatInfoArray UserChatInfoArray;
-	UserChatInfoArray.chats.Add(UserChatInfo);
 	
 	// 모든 클라이언트에게 보내자 (브로드캐스트)
 	NetMulticast_SendChat(userId,chat);
 	// AI에게도 채팅 내용을 전달하자
-	SendChatToAI(UserChatInfoArray);
+	SendChatToAI(userId,chat);
 }
 
 // 모든 클라이언트에게 채팅 내용 보내기
@@ -54,7 +52,7 @@ void AChatManager::NetMulticast_SendChat_Implementation(const FString& userId, c
 }
 
 // AI에게 채팅 내용 전달
-void AChatManager::SendChatToAI(const FUserChatInfoArray& UserChatInfoArray)
+void AChatManager::SendChatToAI(const FString& userId, const FString& chat)
 {
 	// 채팅 내용을 Json형태로 변환해서 넘겨주어야 함
 	
@@ -62,20 +60,18 @@ void AChatManager::SendChatToAI(const FUserChatInfoArray& UserChatInfoArray)
 	FHttpRequestRef httpRequest = FHttpModule::Get().CreateRequest();
 	// 요청 URL - 서버가 알려줌
 	httpRequest->SetURL(TEXT("http://192.168.10.78:8511/"));
-	// 요청 방식 결정하기
 	httpRequest->SetVerb(TEXT("POST"));
-	// 헤더를 설정
 	httpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 
 	// 서버에게 보내고 싶은 데이터 값 (Json)
 	FUserChatInfo info;
 	// TODO: 여기 설정해주기 (연동필요)
-	info.userId = TEXT("Player1"); 
-	info.chat = TEXT("Hello AI!"); 
+	info.userId = userId;
+	info.chat = chat;
 	FString jsonString;
 	FJsonObjectConverter::UStructToJsonObjectString(info, jsonString);
-
 	httpRequest->SetContentAsString(jsonString);
+	
 	// 서버에게 요청을 한 후 응답이 오면 호출되는 함수 등록
 	httpRequest->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully)
 	{
@@ -83,8 +79,8 @@ void AChatManager::SendChatToAI(const FUserChatInfoArray& UserChatInfoArray)
 		// 성공
 		if (bProcessedSuccessfully)
 		{
-			// {}안 이름이 같아야한다 
-			FString jsonString = Response->GetContentAsString(); 
+			// 이름이 같아야한다 {} 안
+			FString jsonString = FString::Printf(TEXT("{\"commentData\": %s}"), *Response->GetContentAsString()); 
 			UE_LOG(LogTemp,Warning,TEXT("%s"),*jsonString);
 		}
 		// 실패
