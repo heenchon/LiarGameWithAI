@@ -4,28 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "LiarGameWithAI/LiarGameInfo.h"
 #include "StartManager.generated.h"
 
-USTRUCT()
-struct FGameStartInfo
-{
-	GENERATED_BODY()
-public:
-	UPROPERTY(VisibleAnywhere)
-	FString id;
-	UPROPERTY(VisibleAnywhere)
-	bool liar;
-	UPROPERTY(VisibleAnywhere)
-	int32 order;
-};
+
 
 USTRUCT()
-struct FGameStartInfoArray
+struct FPlayerInfoArray
 {
 	GENERATED_BODY()
 public:
 	UPROPERTY(VisibleAnywhere)
-	TArray<FGameStartInfo> startData;
+	TArray<FPlayerInfo> startData;
 };
 
 
@@ -47,8 +37,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Json 정보 전달
-	FGameStartInfoArray SendGameStartInfo(); //인자가 array?
+	FPlayerInfoArray SendGameStartInfo(); //인자가 array?
 
 	UPROPERTY(visibleAnywhere)
-	FGameStartInfoArray allGameStartData;
+	FPlayerInfoArray allGameStartData;
 };

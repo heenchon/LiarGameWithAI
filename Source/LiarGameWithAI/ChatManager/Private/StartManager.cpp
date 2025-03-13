@@ -30,7 +30,7 @@ void AStartManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-FGameStartInfoArray AStartManager::SendGameStartInfo()
+FPlayerInfoArray AStartManager::SendGameStartInfo()
 {
 	// 서버에게 요청하는 객체 만들자
 	FHttpRequestRef httpRequest = FHttpModule::Get().CreateRequest();
