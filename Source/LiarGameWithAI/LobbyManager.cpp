@@ -8,16 +8,21 @@ ALobbyManager::ALobbyManager()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void ALobbyManager::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::BeginPlay"));
 	
+	StartWidget = CreateWidget<UGamePlayerWidget>(GetWorld(), WidgetPlayFactory);
+	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::BeginPlay"));
+	if (StartWidget)
+	{
+		StartWidget->AddToPlayerScreen();
+	}
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	PlayerController->bShowMouseCursor = true;
 }
 
 // Called every frame

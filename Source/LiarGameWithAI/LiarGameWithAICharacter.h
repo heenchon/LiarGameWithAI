@@ -50,12 +50,6 @@ class ALiarGameWithAICharacter : public ACharacter
 public:
 	ALiarGameWithAICharacter();
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)
-	TSubclassOf<class UGamePlayerWidget> WidgetFactory;
-
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)
-	class UGamePlayerWidget* StartWidget;
-
 protected:
 
 	/** Called for movement input */
@@ -68,9 +62,7 @@ protected:
 protected:
 
 	virtual void NotifyControllerChanged() override;
-
-	virtual void BeginPlay() override;
-
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:

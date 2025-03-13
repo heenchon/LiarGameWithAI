@@ -13,4 +13,12 @@ UCLASS()
 class LIARGAMEWITHAI_API UGamePlayerWidget : public UUserWidget
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(meta = (BindWidget))
+	class UButton* PlayerStart;
+
+	UFUNCTION()
+	void OnPlayerStartClicked();
+
+	virtual void NativeConstruct() override;
 };

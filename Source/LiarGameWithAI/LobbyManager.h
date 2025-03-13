@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GamePlayerWidget/GamePlayerWidget.h"
 #include "LobbyManager.generated.h"
 
 UCLASS()
@@ -23,4 +24,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TSubclassOf<class UGamePlayerWidget> WidgetPlayFactory;
+
+	UPROPERTY(VisibleAnywhere)
+	class UGamePlayerWidget* StartWidget;
 };
