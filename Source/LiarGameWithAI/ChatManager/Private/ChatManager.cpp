@@ -60,6 +60,7 @@ void AChatManager::SendChatToAI(const FString& userId, const FString& chat)
 	FHttpRequestRef httpRequest = FHttpModule::Get().CreateRequest();
 	// 요청 URL - 서버가 알려줌
 	httpRequest->SetURL(TEXT("http://192.168.10.78:8511/"));
+	// TODO: 물어봐야함
 	httpRequest->SetVerb(TEXT("POST"));
 	httpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 
@@ -70,6 +71,7 @@ void AChatManager::SendChatToAI(const FString& userId, const FString& chat)
 	info.chat = chat;
 	FString jsonString;
 	FJsonObjectConverter::UStructToJsonObjectString(info, jsonString);
+	// POST요청일때임 / GET
 	httpRequest->SetContentAsString(jsonString);
 	
 	// 서버에게 요청을 한 후 응답이 오면 호출되는 함수 등록
@@ -79,9 +81,9 @@ void AChatManager::SendChatToAI(const FString& userId, const FString& chat)
 		// 성공
 		if (bProcessedSuccessfully)
 		{
-			// 이름이 같아야한다 {} 안
-			FString jsonString = FString::Printf(TEXT("{\"commentData\": %s}"), *Response->GetContentAsString()); 
-			UE_LOG(LogTemp,Warning,TEXT("%s"),*jsonString);
+			// 변수를 받고 (AI차례라면?)
+			// AI한테 받은값 출력
+			// Response (Json)이걸 스트럭트로 바꿔
 		}
 		// 실패
 		else

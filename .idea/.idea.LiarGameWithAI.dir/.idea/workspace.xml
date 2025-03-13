@@ -8,9 +8,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88c195c6-3cbb-46c0-a8c6-aa1f144c1d29" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatMessageUI.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPanelUI.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPlayerController.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/StartManager.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatMessageUI.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatPanelUI.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatPlayerController.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/StartManager.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Architecture/Floor_400x400.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Maps/GameMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Maps/GameMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatManager.h" afterDir="false" />
     </list>
@@ -41,24 +48,27 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2uFRgsXFlCzvdbGrXvRNTs5JMzD" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "Uproject.LiarGameWithAI.executor": "Run",
-    "git-widget-placeholder": "ChatSystem",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Uproject.LiarGameWithAI.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;ChatSystem&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="LiarGameWithAI" type="Uproject" factoryName="rider.uproject">
       <configuration_1 setup="1">
@@ -145,6 +155,8 @@
       <workItem from="1741842451225" duration="1649000" />
       <workItem from="1741846669792" duration="413000" />
       <workItem from="1741847145046" duration="7010000" />
+      <workItem from="1741855071675" duration="2081000" />
+      <workItem from="1741860332956" duration="7441000" />
     </task>
     <servers />
   </component>
