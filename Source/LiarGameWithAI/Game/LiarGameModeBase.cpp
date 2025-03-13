@@ -17,14 +17,14 @@ void ALiarGameModeBase::PostLogin(APlayerController* NewPlayer)
 	Super::PostLogin(NewPlayer);
 	
 	ALiarGameState* MyGameState = GetGameState<ALiarGameState>();
-	if (MyGameState && NewPlayer && NewPlayer->PlayerState)
-	{
-		ALiarPlayerState* LiarPS = Cast<ALiarPlayerState>(NewPlayer->PlayerState);
-		if(LiarPS)
-		{
-			MyGameState->PlayerStates.Add(LiarPS);
-		}
-	}
+	// if (MyGameState && NewPlayer && NewPlayer->PlayerState)
+	// {
+	// 	ALiarPlayerState* LiarPS = Cast<ALiarPlayerState>(NewPlayer->PlayerState);
+	// 	if(LiarPS)
+	// 	{
+	// 		MyGameState->PlayerList.Add(LiarPS);
+	// 	}
+	// }
 }
 
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
 #include "GamePlayerName.generated.h"
 
 /**
@@ -14,5 +15,7 @@ class LIARGAMEWITHAI_API UGamePlayerName : public UUserWidget
 {
 	GENERATED_BODY()
 
-	FString name;
+public:
+	UPROPERTY(meta=(BindWidget))
+	UTextBlock* PlayerName;
 };
