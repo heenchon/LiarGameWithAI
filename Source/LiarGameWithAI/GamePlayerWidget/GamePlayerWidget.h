@@ -16,9 +16,19 @@ class LIARGAMEWITHAI_API UGamePlayerWidget : public UUserWidget
 	
 	UPROPERTY(meta = (BindWidget))
 	class UButton* PlayerStart;
+	UPROPERTY(meta = (BindWidget))
+	class UProgressBar* RoadingBar;
+	UPROPERTY(meta = (BindWidget))
+	class UCanvasPanel* MainPanel;
+	
+	float CurrentTime = 0.0f;
 
 	UFUNCTION()
 	void OnPlayerStartClicked();
 
 	virtual void NativeConstruct() override;
+
+	virtual void NativeTick(const FGeometry & MyGeometry, float InDeltaTime) override;
+
+	void GetLoadPlayer();
 };

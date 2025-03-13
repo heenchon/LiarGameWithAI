@@ -50,6 +50,12 @@ class ALiarGameWithAICharacter : public ACharacter
 public:
 	ALiarGameWithAICharacter();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	TSubclassOf<class UGamePlayerName> PlayerNameFactory;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	class UWidgetComponent* GamePlayerName;
+
 protected:
 
 	/** Called for movement input */
@@ -62,6 +68,10 @@ protected:
 protected:
 
 	virtual void NotifyControllerChanged() override;
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -70,5 +80,7 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	void SetWidgetNameRot();
 };
 

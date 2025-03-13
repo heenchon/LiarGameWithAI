@@ -29,6 +29,5 @@ void ALobbyManager::BeginPlay()
 void ALobbyManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
