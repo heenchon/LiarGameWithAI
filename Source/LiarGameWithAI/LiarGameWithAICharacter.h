@@ -21,7 +21,8 @@ class ALiarGameWithAICharacter : public ACharacter
 	GENERATED_BODY()
 
 	// LiarCharacter설정값
-
+	
+	
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
