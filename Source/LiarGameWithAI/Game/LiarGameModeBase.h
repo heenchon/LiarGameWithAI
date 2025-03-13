@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
+#include "GameFramework/GameMode.h"
 #include "LiarGameModeBase.generated.h"
 
 class ALiarGameState;
@@ -12,7 +12,7 @@ class ULiarGameSystem;
  * 
  */
 UCLASS()
-class LIARGAMEWITHAI_API ALiarGameModeBase : public AGameModeBase
+class LIARGAMEWITHAI_API ALiarGameModeBase : public AGameMode
 {
 	GENERATED_BODY()
 
