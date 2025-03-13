@@ -91,11 +91,19 @@ void ALiarGameState::InitPlayerInfo()
 	// 	return;
 	// }
 
+	ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
+	ALiarGameWithAICharacter* MyPlayer = Cast<ALiarGameWithAICharacter>(My);
+
 	for (int i = 0; i < PlayerList.Num(); i++)
 	{
 		// TODO: playerList 아이디가 자신의 아이디와 같다면 PlayerController의 Pawn을 의자에 앉히자.
-
 		FPlayerInfo info = PlayerList[i];
+
+		if (MyPlayer->UserId == info.id)
+		{
+			MyPlayer->SetActorTransform(Chairs[i]->SitPosition->GetComponentTransform());
+			continue;
+		}
 		
 		Chairs[i]->SpawnPlayer(info.id, info.order, info.liar);
 	}

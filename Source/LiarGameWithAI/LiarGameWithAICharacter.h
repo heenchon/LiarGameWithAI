@@ -56,6 +56,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	class UWidgetComponent* GamePlayerName;
 
+	FString UserId;
+
 protected:
 
 	/** Called for movement input */
@@ -82,5 +84,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	void SetWidgetNameRot();
+
+	void SetUserId(FString userId, bool mine = false);
 };
 

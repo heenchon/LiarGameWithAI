@@ -13,6 +13,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/PlayerState.h"
+#include "GamePlayerWidget/GamePlayerName.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -88,6 +89,9 @@ void ALiarGameWithAICharacter::NotifyControllerChanged()
 void ALiarGameWithAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// TODO: Test code 서버 통신 작업시 지울 것
+	SetUserId(TEXT("Test0"), true);
 }
 
 void ALiarGameWithAICharacter::Tick(float DeltaTime)
@@ -107,11 +111,11 @@ void ALiarGameWithAICharacter::SetupPlayerInputComponent(UInputComponent* Player
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ALiarGameWithAICharacter::Move);
+		// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ALiarGameWithAICharacter::Move);
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ALiarGameWithAICharacter::Look);
@@ -147,6 +151,29 @@ void ALiarGameWithAICharacter::SetWidgetNameRot()
 	// compHP 를 구한  Rotator 값으로 설정.
 	GamePlayerName->SetWorldRotation(rot);
 	// UE_LOG(LogTemp,Warning,TEXT("PlayerIndex%d"),Index);
+}
+
+void ALiarGameWithAICharacter::SetUserId(FString userId, bool mine)
+{
+	UserId = userId;
+
+	UGamePlayerName* NameUI = Cast<UGamePlayerName>(GamePlayerName->GetWidget());
+
+	if (NameUI)
+	{
+		NameUI->PlayerName->SetText(FText::FromString(UserId));
+		
+		if (mine)
+		{
+			FSlateColor Col(FLinearColor::Yellow);
+			NameUI->PlayerName->SetColorAndOpacity(Col);
+		}
+		else
+		{
+			FSlateColor Col(FLinearColor::White);
+			NameUI->PlayerName->SetColorAndOpacity(Col);
+		}
+	}
 }
 
 void ALiarGameWithAICharacter::Move(const FInputActionValue& Value)
