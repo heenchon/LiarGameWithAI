@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "LiarGameInfo.generated.h"
 
 USTRUCT(BlueprintType)
 struct FPlayerInfo

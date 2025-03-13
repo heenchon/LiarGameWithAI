@@ -17,14 +17,14 @@ public:
 	FString chat;
 };
 
-USTRUCT()
+/*USTRUCT()
 struct FUserChatInfoArray
 {
 	GENERATED_BODY()
 public:
 	UPROPERTY()
 	TArray<FUserChatInfo> chats;
-};
+};*/
 
 UCLASS()
 class LIARGAMEWITHAI_API AChatManager : public AActor
