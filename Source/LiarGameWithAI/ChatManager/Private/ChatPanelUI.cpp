@@ -6,6 +6,7 @@
 #include "Components/EditableTextBox.h"
 #include "Components/ScrollBox.h"
 #include "GameFramework/PlayerState.h"
+#include "Kismet/GameplayStatics.h"
 #include "LiarGameWithAI/ChatManager/Public/ChatManager.h"
 #include "LiarGameWithAI/ChatManager/Public/ChatMessageUI.h"
 
@@ -19,7 +20,7 @@ void UChatPanelUI::NativeConstruct()
 		ChatInputBox->OnTextCommitted.AddDynamic(this, &UChatPanelUI::OnTextCommitted);
 	}
 
-	ChatManager = Cast<AChatManager>(GetWorld()->SpawnActor(AChatManager::StaticClass()));
+	ChatManager = Cast<AChatManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AChatManager::StaticClass()));
 
 }
 

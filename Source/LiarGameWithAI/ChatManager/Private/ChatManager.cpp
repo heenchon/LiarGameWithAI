@@ -8,6 +8,7 @@
 #include "JsonObjectConverter.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"
+#include "LiarGameWithAI/LiarGameInfo.h"
 #include "LiarGameWithAI/LobbyManager.h"
 #include "LiarGameWithAI/ChatManager/Public/ChatPanelUI.h"
 #include "LiarGameWithAI/ChatManager/Public/ChatPlayerController.h"
@@ -117,8 +118,8 @@ void AChatManager::IsSentence_Implementation(const FString& UserId, const FStrin
 				{
 					// 문장으로 판별된 경우
 					FValidSentenceResponse SentenceData;
-					SentenceData.UserID = JsonObject->GetStringField("user_id");
-					SentenceData.Word = JsonObject->GetStringField("word");
+					SentenceData.UserID = JsonObject->GetStringField(TEXT("user_id"));
+					SentenceData.Word = JsonObject->GetStringField(TEXT("word"));
 
 					UE_LOG(LogTemp, Log, TEXT("Valid Sentence - User: %s, Word: %s"),
 						   *SentenceData.UserID, *SentenceData.Word);
@@ -218,7 +219,7 @@ void AChatManager::LobbyCheck_Implementation()
 			FString ResponseContent = Response->GetContentAsString();
 			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
 			
-			FLobbyResponse LobbyData;
+			FLobbyCheck LobbyData;
 			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &LobbyData, 0, 0);
 		}
 		// 실패
@@ -633,6 +634,40 @@ void AChatManager::StartCheck_Implementation()
 			// 게임 시작 전 로직 처리
 		}
 	});
+}
+
+void AChatManager::GameStart_Implementation()
+{
+	// 서버에게 요청하는 객체
+	FHttpRequestRef httpRequest = FHttpModule::Get().CreateRequest();
+	httpRequest->SetURL(TEXT("http://192.168.20.118:8088/game_start"));
+	httpRequest->SetVerb(TEXT("POST"));
+	httpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	// 서버에게 요청을 한 후 응답이 오면 호출되는 함수 등록
+	httpRequest->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully)
+	{
+		// 응답이 오면 실행됨
+		// 성공
+		if (bProcessedSuccessfully)
+		{
+			FString ResponseContent = Response->GetContentAsString();
+			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
+			FGameInfo GameData;
+			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &GameData, 0, 0);
+
+			// LobbyManager->EnterLobbyCompleted(LobbyData);
+		}
+		// 실패
+		else
+		{
+			UE_LOG(LogTemp,Warning,TEXT("통신실패: %d"), Response->GetResponseCode());
+			return;
+		}
+	});
+	
+	// 요청을 보내자
+	httpRequest->ProcessRequest();
 }
 
 // AI에게 채팅 내용 전달
