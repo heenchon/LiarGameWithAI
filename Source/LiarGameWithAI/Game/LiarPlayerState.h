@@ -27,4 +27,13 @@ protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+
+public:
+	// 서버에게 채팅 내용 보내기
+	UFUNCTION(Server, Reliable)
+	void ServerRPC_SendChat(const FString& userId, const FString& chat);
+	
+	// 모든 클라이언트에게 채팅 내용 보내기
+	UFUNCTION(NetMulticast, Reliable)
+	void NetMulticast_SendChat(const FString& userId, const FString& chat);
 };

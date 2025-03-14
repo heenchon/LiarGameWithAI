@@ -346,8 +346,7 @@ void AChatManager::RecieveKeywords_Implementation()
 }
 
 
-
-// 서버에게 채팅 내용 보내기
+/*// 서버에게 채팅 내용 보내기
 void AChatManager::ServerRPC_SendChat_Implementation(const FString& userId, const FString& chat)
 {
 	// FUserChatInfo 생성 및 추가
@@ -364,19 +363,20 @@ void AChatManager::ServerRPC_SendChat_Implementation(const FString& userId, cons
 // 모든 클라이언트에게 채팅 내용 보내기
 void AChatManager::NetMulticast_SendChat_Implementation(const FString& userId, const FString& chat)
 {
-	// 현재 클라이언트의 로컬 플레이어 컨트롤러를 가져오고
-	APlayerController* LocalPlayerController = GetWorld()->GetFirstPlayerController();
-	if (LocalPlayerController && LocalPlayerController->IsLocalPlayerController())
+	// 모든 플레이어 컨트롤러에게 채팅 메시지 전달
+	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
 	{
-		// PlayerController에서 UI를 가져오자
-		AChatPlayerController* ChatPlayerController = Cast<AChatPlayerController>(LocalPlayerController);
-		if (ChatPlayerController && ChatPlayerController->chatPanel)
+		APlayerController* PlayerController = It->Get();
+		if (PlayerController)
 		{
-			// UI 업데이트하자
-			ChatPlayerController->chatPanel->UpdateChat(FText::FromString(userId), FText::FromString(chat));
+			AChatPlayerController* MyPlayerController = Cast<AChatPlayerController>(PlayerController);
+			if (MyPlayerController && MyPlayerController->chatPanel)
+			{
+				MyPlayerController->chatPanel->UpdateChat(FText::FromString(userId), FText::FromString(chat));
+			}
 		}
 	}
-}
+}*/
 
 void AChatManager::VotePlayer_Implementation(const FString& UserId, const FString& ToId)
 {
@@ -668,11 +668,10 @@ void AChatManager::GameStart_Implementation()
 	httpRequest->ProcessRequest();
 }
 
+/*
 // AI에게 채팅 내용 전달
 void AChatManager::SendChatToAI(const FString& userId, const FString& chat)
 {
-	// 채팅 내용을 Json형태로 변환해서 넘겨주어야 함
-	
 	// 서버에게 요청하는 객체 만들자
 	FHttpRequestRef httpRequest = FHttpModule::Get().CreateRequest();
 	// 요청 URL - 서버가 알려줌
@@ -713,3 +712,4 @@ void AChatManager::SendChatToAI(const FString& userId, const FString& chat)
 	// 요청을 보내자
 	httpRequest->ProcessRequest();
 }
+*/

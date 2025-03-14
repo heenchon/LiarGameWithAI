@@ -8,7 +8,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="88c195c6-3cbb-46c0-a8c6-aa1f144c1d29" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ChatUI/BP_ChatController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ChatUI/BP_ChatController.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ChatUI/BP_ChatManager.uasset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ChatUI/BP_GM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ChatUI/BP_GM.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ChatUI/BP_PC_Chat.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ChatUI/BP_PC_Chat.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/ChatUI/TestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ChatUI/TestMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatManager.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPanelUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPanelUI.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPlayerController.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatManager.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatPlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatPlayerController.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarPlayerState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarPlayerState.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarPlayerState.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarPlayerState.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +46,8 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="cidr-memory-view://0" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../Program Files/Epic Games/UE_5.5/Engine/Source/Runtime/UMG/Private/UserWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Intermediate/Build/Win64/UnrealEditor/Inc/LiarGameWithAI/UHT/LiarGameInfo.gen.cpp" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -153,7 +167,7 @@
       <workItem from="1741870327702" duration="978000" />
       <workItem from="1741910620506" duration="7199000" />
       <workItem from="1741917850596" duration="4704000" />
-      <workItem from="1741925244126" duration="655000" />
+      <workItem from="1741925244126" duration="6643000" />
     </task>
     <servers />
   </component>

@@ -17,10 +17,14 @@ class LIARGAMEWITHAI_API AChatPlayerController : public APlayerController
 public:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> UChatPanelUIClass;
 	UPROPERTY()
 	UChatPanelUI* chatPanel;
+
+	AChatManager* ChatManager;
 	
 };
+
+
