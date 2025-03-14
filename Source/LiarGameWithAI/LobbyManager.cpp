@@ -114,6 +114,7 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("야 체크해 임마"));
 		GetWorld()->
 		GetTimerManager()
 		.SetTimer(
@@ -182,11 +183,14 @@ void ALobbyManager::StartGameCompleted(const FGameInfo& GameData)
 {
 	GetWorld()->GetTimerManager().ClearTimer(LobbyCheckTimerHandle);
 	LobbyCheckTimerHandle.Invalidate();
+
+	UGameInstance* GI = GetGameInstance();
+	UE_LOG(LogTemp, Warning, TEXT("GameInstance is: %p"), GI);
 	
-	ULairGameInstance* GameInstance = Cast<ULairGameInstance>(GetGameInstance());
-	if (GameInstance)
+	ULairGameInstance* LairGameInstance = Cast<ULairGameInstance>(GetGameInstance());
+	if (LairGameInstance)
 	{
-		GameInstance->GameInfo = GameData;
+		LairGameInstance->GameInfo = GameData;
 	}
 
 	UGameplayStatics::OpenLevel(GetWorld(), FName("GameMap"));

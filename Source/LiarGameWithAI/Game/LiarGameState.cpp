@@ -119,7 +119,7 @@ void ALiarGameState::InitPlayer()
 	}
 }
 
-void ALiarGameState::InitKeyword(FString common, FString lair)
+void ALiarGameState::InitKeyword(const FString& common, const FString& lair)
 {
 	CommonKeyword = common;
 	LairKeyword = lair;
@@ -243,22 +243,22 @@ void ALiarGameState::ScreenLog(const FString& string)
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, Msg);
 }
 
-void ALiarGameState::Initialize(FGameInfo info)
+void ALiarGameState::Initialize(const FGameInfo& info)
 {
 	// TODO: ChatManager에게 게임의 정보를 요청하자
 	
 	// 받은 데이터를 가지고 매니저 initialize하자
 	// 라운드 시작하자 -> 1번째부터 시작!
 	
-	info.players.Sort([](const FPlayerInfo& A, const FPlayerInfo& B)
-	{
-		return A.order < B.order;
-	});
-	
 	for (int32 i = 0; i < info.players.Num(); i++)
 	{
 		PlayerList.Add(info.players[i]);
 	}
+	
+	PlayerList.Sort([](const FPlayerInfo& A, const FPlayerInfo& B)
+	{
+		return A.order < B.order;
+	});
 	
 	InitKeyword(info.common_keyword, info.lair_keyword);
 	GameStart();

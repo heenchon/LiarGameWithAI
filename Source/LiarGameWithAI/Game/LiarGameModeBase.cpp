@@ -23,10 +23,10 @@ void ALiarGameModeBase::BeginPlay()
 		ALiarGameState* MyGameState = GetGameState<ALiarGameState>();
 		if (MyGameState)
 		{
-			ULairGameInstance* GameInstance = Cast<ULairGameInstance>(GetGameInstance());
-			if (GameInstance)
+			ULairGameInstance* LairGameInstance = Cast<ULairGameInstance>(GetGameInstance());
+			if (LairGameInstance)
 			{
-				MyGameState->Initialize(GameInstance->GameInfo);
+				MyGameState->Initialize(LairGameInstance->GameInfo);
 			}
 		}
 	}

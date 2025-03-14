@@ -51,7 +51,7 @@ private:
 	
 	UFUNCTION()
 	void InitPlayer();
-	void InitKeyword(FString common, FString liar);
+	void InitKeyword(const FString& common, const FString& liar);
 	void ShowKeyword();
 	
 	void UpdateCameraByOrder(int order);
@@ -68,7 +68,7 @@ private:
 	void ScreenLog(const FString& string);
 	
 public:
-	void Initialize(FGameInfo info);
+	void Initialize(const FGameInfo& info);
 	
 	UFUNCTION(Exec)
 	void LiarTest();

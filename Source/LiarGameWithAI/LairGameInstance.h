@@ -16,6 +16,8 @@ class LIARGAMEWITHAI_API ULairGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+	virtual void Init() override;
+	
 	UPROPERTY(EditAnywhere)
 	FGameInfo GameInfo;
 };
