@@ -99,7 +99,7 @@ void ALiarGameWithAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	SetWidgetNameRot();
+	//SetWidgetNameRot();
 	// if (GetWorld()->GetFirstPlayerController()->WasInputKeyJustPressed(EKeys::R))
 	// {
 	// 	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::Tick"));

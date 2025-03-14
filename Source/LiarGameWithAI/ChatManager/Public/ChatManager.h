@@ -91,4 +91,6 @@ public:
 	// AI에게 채팅 내용 전달 (Json으로 바꾸자)
 	void SendChatToAI(const FString& userId, const FString& chat);
 
+	class ALobbyManager* LobbyManager;
+
 };

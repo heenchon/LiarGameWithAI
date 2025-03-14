@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "LiarGameWithAI/LobbyManager.h"
 #include "GamePlayerWidget.generated.h"
 
 /**
@@ -24,7 +23,8 @@ class LIARGAMEWITHAI_API UGamePlayerWidget : public UUserWidget
 	
 	float CurrentTime = 0.0f;
 
-	ALobbyManager* LobbyManager;
+	UPROPERTY()
+	class ALobbyManager* LobbyManager;
 
 	UFUNCTION()
 	void OnPlayerStartClicked();

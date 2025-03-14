@@ -3,6 +3,9 @@
 
 #include "LobbyManager.h"
 
+#include "EngineUtils.h"
+#include "ChatManager/Public/ChatManager.h"
+
 // Sets default values
 ALobbyManager::ALobbyManager()
 {
@@ -14,6 +17,14 @@ ALobbyManager::ALobbyManager()
 void ALobbyManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+	{
+		if (auto Manager = Cast<AChatManager>(*It))
+		{
+			ChatManager = Manager;
+		}
+	}
 	
 	StartWidget = CreateWidget<UGamePlayerWidget>(GetWorld(), WidgetPlayFactory);
 	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::BeginPlay"));
@@ -29,5 +40,16 @@ void ALobbyManager::BeginPlay()
 void ALobbyManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ALobbyManager::EnterLobby()
+{
+	ChatManager->EnterLobby();
+}
+
+void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
+{
+	// 플레이어들을 받아서
+	// 필드에 소환
 }
 

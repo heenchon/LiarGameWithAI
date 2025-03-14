@@ -3,10 +3,12 @@
 
 #include "LiarGameWithAI/ChatManager/Public/ChatManager.h"
 
+#include "EngineUtils.h"
 #include "HttpModule.h"
 #include "JsonObjectConverter.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"
+#include "LiarGameWithAI/LobbyManager.h"
 #include "LiarGameWithAI/ChatManager/Public/ChatPanelUI.h"
 #include "LiarGameWithAI/ChatManager/Public/ChatPlayerController.h"
 
@@ -23,7 +25,14 @@ AChatManager::AChatManager()
 void AChatManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+	{
+		if (auto Manager = Cast<ALobbyManager>(*It))
+		{
+			LobbyManager = Manager;
+		}
+	}
 }
 
 // Called every frame
@@ -87,7 +96,7 @@ void AChatManager::EnterLobby_Implementation()
 {
 	// 서버에게 요청하는 객체
 	FHttpRequestRef httpRequest = FHttpModule::Get().CreateRequest();
-	httpRequest->SetURL(TEXT("http://192.168.20.118:8088/docs#/default/make_room_lobby_post"));
+	httpRequest->SetURL(TEXT("http://192.168.20.118:8088/lobby"));
 	httpRequest->SetVerb(TEXT("POST"));
 	httpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 
@@ -101,7 +110,9 @@ void AChatManager::EnterLobby_Implementation()
 			FString ResponseContent = Response->GetContentAsString();
 			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
 			FLobbyResponse LobbyData;
-			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &LobbyData, 0, 0);		
+			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &LobbyData, 0, 0);
+
+			LobbyManager->EnterLobbyCompleted(LobbyData);
 		}
 		// 실패
 		else

@@ -4,10 +4,12 @@
 #include "GamePlayerWidget.h"
 
 #include "DetailTreeNode.h"
+#include "EngineUtils.h"
 #include "MaterialHLSLTree.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
 #include "Components/ProgressBar.h"
+#include "LiarGameWithAI/LobbyManager.h"
 
 void UGamePlayerWidget::NativeConstruct()
 {
@@ -19,7 +21,13 @@ void UGamePlayerWidget::NativeConstruct()
 		PlayerStart->OnClicked.AddDynamic(this, &UGamePlayerWidget::OnPlayerStartClicked);
 	}
 
-	
+	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
+	{
+		if (auto Manager = Cast<ALobbyManager>(*It))
+		{
+			LobbyManager = Manager;
+		}
+	}
 }
 
 void UGamePlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -45,6 +53,9 @@ void UGamePlayerWidget::OnPlayerStartClicked()
 {
 	MainPanel->SetVisibility(ESlateVisibility::Visible);
 	PlayerStart->SetVisibility(ESlateVisibility::Hidden);
+
+	LobbyManager->EnterLobby();
+	
 	//GetLoadPlayer();
 	
 	// this->RemoveFromViewport();
