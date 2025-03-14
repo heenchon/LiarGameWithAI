@@ -17,19 +17,19 @@ ALiarGameModeBase::ALiarGameModeBase()
 void ALiarGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("GameMap"))
-	{
-		ALiarGameState* MyGameState = GetGameState<ALiarGameState>();
-		if (MyGameState)
-		{
-			ULairGameInstance* LairGameInstance = Cast<ULairGameInstance>(GetGameInstance());
-			if (LairGameInstance)
-			{
-				MyGameState->Initialize(LairGameInstance->GameInfo);
-			}
-		}
-	}
+	//
+	// if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("GameMap"))
+	// {
+	// 	ALiarGameState* MyGameState = GetGameState<ALiarGameState>();
+	// 	if (MyGameState)
+	// 	{
+	// 		ULairGameInstance* LairGameInstance = Cast<ULairGameInstance>(GetGameInstance());
+	// 		if (LairGameInstance)
+	// 		{
+	// 			MyGameState->Initialize(LairGameInstance->GameInfo);
+	// 		}
+	// 	}
+	// }
 }
 
 void ALiarGameModeBase::PostLogin(APlayerController* NewPlayer)

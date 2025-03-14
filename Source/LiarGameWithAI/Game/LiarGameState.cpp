@@ -6,11 +6,22 @@
 #include "LiarPlayerState.h"
 #include "EngineUtils.h"
 #include "Camera/CameraActor.h"
+#include "Kismet/GameplayStatics.h"
 #include "LiarGameWithAI/Chair.h"
+#include "LiarGameWithAI/LairGameInstance.h"
 
 void ALiarGameState::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("GameMap"))
+	{
+		ULairGameInstance* LairGameInstance = Cast<ULairGameInstance>(GetGameInstance());
+		if (LairGameInstance)
+		{
+			Initialize(LairGameInstance->GameInfo);
+		}
+	}
 }
 
 void ALiarGameState::LiarTest()
@@ -177,7 +188,6 @@ void ALiarGameState::CollectAnswers(int order)
 
 void ALiarGameState::InputAnswer()
 {
-	ChatManager->
 	ScreenLog("Type short explanation of the keyword");
 }
 
