@@ -9,18 +9,10 @@
   <component name="ChangeListManager">
     <list default="true" id="88c195c6-3cbb-46c0-a8c6-aa1f144c1d29" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ChatUI/BP_ChatController.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ChatUI/BP_ChatController.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ChatUI/BP_ChatManager.uasset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ChatUI/BP_GM.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ChatUI/BP_GM.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ChatUI/BP_PC_Chat.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ChatUI/BP_PC_Chat.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/ChatUI/TestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/ChatUI/TestMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPanelUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPanelUI.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPlayerController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPlayerController.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatPlayerController.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatPlayerController.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarPlayerState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarPlayerState.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarPlayerState.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarPlayerState.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarGameState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarGameState.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +159,10 @@
       <workItem from="1741870327702" duration="978000" />
       <workItem from="1741910620506" duration="7199000" />
       <workItem from="1741917850596" duration="4704000" />
-      <workItem from="1741925244126" duration="6643000" />
+      <workItem from="1741925244126" duration="7158000" />
+      <workItem from="1741932428959" duration="4000" />
+      <workItem from="1741932446921" duration="1467000" />
+      <workItem from="1741933927752" duration="806000" />
     </task>
     <servers />
   </component>

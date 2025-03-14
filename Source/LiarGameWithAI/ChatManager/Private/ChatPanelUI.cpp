@@ -7,6 +7,7 @@
 #include "Components/ScrollBox.h"
 #include "GameFramework/PlayerState.h"
 #include "Kismet/GameplayStatics.h"
+#include "LiarGameWithAI/LiarGameWithAICharacter.h"
 #include "LiarGameWithAI/ChatManager/Public/ChatManager.h"
 #include "LiarGameWithAI/ChatManager/Public/ChatMessageUI.h"
 #include "LiarGameWithAI/Game/LiarPlayerState.h"
@@ -44,20 +45,23 @@ void UChatPanelUI::OnTextCommitted(const FText& InText, ETextCommit::Type Commit
 	{
 		// 플레이어 이름과 채팅 내용을 서버에 전송
 		// TODO: 가져와야할 값 (플레이어 이름, 채팅내용)
-		UE_LOG(LogTemp, Display, TEXT("Enter"));
 		
 		APlayerController* PlayerController = GetOwningPlayer();
 		if (PlayerController)
 		{
-			UE_LOG(LogTemp, Display, TEXT("OnTextCommitted"));
 			ALiarPlayerState* GamePlayerState = Cast<ALiarPlayerState>(PlayerController->PlayerState);
 			
 			if (GamePlayerState)
 			{
-				UE_LOG(LogTemp, Display, TEXT("playerstate"));
-				FString PlayerName = PlayerController->GetPlayerState<APlayerState>()->GetPlayerName();
-				GamePlayerState->ServerRPC_SendChat(PlayerName, InText.ToString());
-				ChatInputBox->SetText(FText::GetEmpty());
+				ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
+				ALiarGameWithAICharacter* MyPlayer = Cast<ALiarGameWithAICharacter>(My);
+				if (MyPlayer)
+				{
+					FString PlayerName = MyPlayer->UserId;
+					GamePlayerState->ServerRPC_SendChat(PlayerName, InText.ToString());
+					// 텍스트창 비우기
+					ChatInputBox->SetText(FText::GetEmpty());
+				}
 			}
 		}
 	}

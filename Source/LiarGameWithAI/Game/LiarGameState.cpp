@@ -177,7 +177,6 @@ void ALiarGameState::CollectAnswers(int order)
 
 void ALiarGameState::InputAnswer()
 {
-	ChatManager->
 	ScreenLog("Type short explanation of the keyword");
 }
 

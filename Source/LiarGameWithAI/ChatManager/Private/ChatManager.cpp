@@ -3,6 +3,8 @@
 
 #include "LiarGameWithAI/ChatManager/Public/ChatManager.h"
 
+#include <ThirdParty/ShaderConductor/ShaderConductor/External/SPIRV-Headers/include/spirv/unified1/spirv.h>
+
 #include "EngineUtils.h"
 #include "HttpModule.h"
 #include "JsonObjectConverter.h"
@@ -78,7 +80,7 @@ void AChatManager::IsSentence_Implementation(const FString& UserId, const FStrin
 {
 	// 서버에게 요청하는 객체
 	FHttpRequestRef httpRequest = FHttpModule::Get().CreateRequest();
-	httpRequest->SetURL(TEXT("http://192.168.20.118:8088/is_sentence"));
+	httpRequest->SetURL(TEXT("http://192.168.20.118:8088/keyword"));
 	httpRequest->SetVerb(TEXT("POST"));
 	httpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
 
@@ -105,53 +107,8 @@ void AChatManager::IsSentence_Implementation(const FString& UserId, const FStrin
 			FString ResponseContent = Response->GetContentAsString();
 			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
 			
-			// JSON 파싱
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(ResponseContent);
-
-			if (FJsonSerializer::Deserialize(Reader, JsonObject) && JsonObject.IsValid())
-			{
-				TArray<FString> Keys;
-				JsonObject->Values.GetKeys(Keys);
-
-				if (Keys.Num() == 2 && Keys.Contains("user_id") && Keys.Contains("word"))
-				{
-					// 문장으로 판별된 경우
-					FValidSentenceResponse SentenceData;
-					SentenceData.UserID = JsonObject->GetStringField(TEXT("user_id"));
-					SentenceData.Word = JsonObject->GetStringField(TEXT("word"));
-
-					UE_LOG(LogTemp, Log, TEXT("Valid Sentence - User: %s, Word: %s"),
-						   *SentenceData.UserID, *SentenceData.Word);
-				}
-				else if (Keys.Num() == 1 && JsonObject->GetStringField(Keys[0]) != "")
-				{
-					// 특정 조건에서 생성된 연관 단어
-					FGeneratedWordResponse GeneratedData;
-					GeneratedData.UserID = Keys[0];
-					GeneratedData.GeneratedWord = JsonObject->GetStringField(Keys[0]);
-
-					UE_LOG(LogTemp, Log, TEXT("Generated Word - User: %s, Word: %s"),
-						   *GeneratedData.UserID, *GeneratedData.GeneratedWord);
-				}
-				else if (Keys.Num() == 1 && JsonObject->GetBoolField(Keys[0]) == false)
-				{
-					// 문장이 아닌 경우
-					FInvalidSentenceResponse InvalidData;
-					InvalidData.UserID = Keys[0];
-					InvalidData.IsValid = false;
-
-					UE_LOG(LogTemp, Log, TEXT("Invalid Sentence - User: %s"), *InvalidData.UserID);
-				}
-				else
-				{
-					UE_LOG(LogTemp, Error, TEXT("알 수 없는 응답 형식"));
-				}
-			}
-			else
-			{
-				UE_LOG(LogTemp, Error, TEXT("JSON 파싱 실패"));
-			}
+			FIsSentance SentanceData;
+			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &SentanceData, 0, 0);
 		}
 		// 실패
 		else
@@ -318,18 +275,18 @@ void AChatManager::RecieveKeywords_Implementation()
 					if (RoleObject.IsValid())
 					{
 						FPlayerRole PlayerRole;
-						PlayerRole.Keyword = RoleObject->GetStringField(TEXT("keyword"));
-						PlayerRole.Liar = RoleObject->GetBoolField(TEXT("liar"));
+						PlayerRole.keyword = RoleObject->GetStringField(TEXT("keyword"));
+						PlayerRole.liar = RoleObject->GetBoolField(TEXT("liar"));
 
-						RolesData.Roles.Add(UserID, PlayerRole);
+						RolesData.roles.Add(UserID, PlayerRole);
 					}
 				}
 
 				// 결과 출력
-				for (const auto& Pair : RolesData.Roles)
+				for (const auto& Pair : RolesData.roles)
 				{
 					UE_LOG(LogTemp, Log, TEXT("UserID: %s, Keyword: %s, Liar: %s"),
-						   *Pair.Key, *Pair.Value.Keyword, Pair.Value.Liar ? TEXT("true") : TEXT("false"));
+						   *Pair.Key, *Pair.Value.keyword, Pair.Value.liar ? TEXT("true") : TEXT("false"));
 				}
 			}
 		}
@@ -345,38 +302,6 @@ void AChatManager::RecieveKeywords_Implementation()
 	httpRequest->ProcessRequest();
 }
 
-
-/*// 서버에게 채팅 내용 보내기
-void AChatManager::ServerRPC_SendChat_Implementation(const FString& userId, const FString& chat)
-{
-	// FUserChatInfo 생성 및 추가
-	FUserChatInfo UserChatInfo;
-	UserChatInfo.userId = userId;
-	UserChatInfo.chat = chat;
-	
-	// 모든 클라이언트에게 보내자 (브로드캐스트)
-	NetMulticast_SendChat(userId,chat);
-	// AI에게도 채팅 내용을 전달하자
-	SendChatToAI(userId,chat);
-}
-
-// 모든 클라이언트에게 채팅 내용 보내기
-void AChatManager::NetMulticast_SendChat_Implementation(const FString& userId, const FString& chat)
-{
-	// 모든 플레이어 컨트롤러에게 채팅 메시지 전달
-	for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; ++It)
-	{
-		APlayerController* PlayerController = It->Get();
-		if (PlayerController)
-		{
-			AChatPlayerController* MyPlayerController = Cast<AChatPlayerController>(PlayerController);
-			if (MyPlayerController && MyPlayerController->chatPanel)
-			{
-				MyPlayerController->chatPanel->UpdateChat(FText::FromString(userId), FText::FromString(chat));
-			}
-		}
-	}
-}*/
 
 void AChatManager::VotePlayer_Implementation(const FString& UserId, const FString& ToId)
 {
@@ -423,7 +348,6 @@ void AChatManager::VotePlayer_Implementation(const FString& UserId, const FStrin
 	// 요청을 보내자
 	httpRequest->ProcessRequest();
 }
-
 
 void AChatManager::CheckPlayerAnswer_Implementation(const FString& UserId, const FString& Answer)
 {
@@ -566,8 +490,8 @@ void AChatManager::GameState_Implementation()
 						TSharedPtr<FJsonObject> PlayerStateObject = PlayerPair.Value->AsObject();
 
 						FPlayersStates PlayerState;
-						PlayerState.Keyword = PlayerStateObject->GetStringField(TEXT("keyword"));
-						PlayerState.bIsLiar = PlayerStateObject->GetBoolField(TEXT("liar"));
+						PlayerState.keyword = PlayerStateObject->GetStringField(TEXT("keyword"));
+						PlayerState.liar = PlayerStateObject->GetBoolField(TEXT("liar"));
 
 						Players.Add(UserID, PlayerState);
 					}

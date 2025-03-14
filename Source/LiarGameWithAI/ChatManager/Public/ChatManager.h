@@ -45,9 +45,9 @@ struct FPlayerRole
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadOnly)
-	FString Keyword;
+	FString keyword;
 	UPROPERTY(BlueprintReadOnly)
-	bool Liar;
+	bool liar;
 };
 
 USTRUCT(BlueprintType)
@@ -56,41 +56,21 @@ struct FRolesResponse
 	GENERATED_BODY()
 public:	
 	UPROPERTY(BlueprintReadOnly)
-	TMap<FString, FPlayerRole> Roles;
+	TMap<FString, FPlayerRole> roles;
 };
 
 
 USTRUCT(BlueprintType)
-struct FValidSentenceResponse
+struct FIsSentance
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly)
-	FString UserID;
-	UPROPERTY(BlueprintReadOnly)
-	FString Word;
-};
-
-USTRUCT(BlueprintType)
-struct FGeneratedWordResponse
-{
-	GENERATED_BODY()
-
-	UPROPERTY(BlueprintReadOnly)
-	FString UserID;
-	UPROPERTY(BlueprintReadOnly)
-	FString GeneratedWord;
-};
-
-USTRUCT(BlueprintType)
-struct FInvalidSentenceResponse
-{
-	GENERATED_BODY()
-
-	UPROPERTY(BlueprintReadOnly)
-	FString UserID;
-	UPROPERTY(BlueprintReadOnly)
-	bool IsValid;
+	UPROPERTY()
+	FString user_id;
+	UPROPERTY()
+	FString word;
+	UPROPERTY()
+	bool success;
 };
 
 USTRUCT(BlueprintType)
@@ -99,7 +79,7 @@ struct FAIgeneratedWord
 	GENERATED_BODY()
 
 	UPROPERTY()
-	FString RelatedWord;
+	FString related_word;
 };
 
 USTRUCT(BlueprintType)
@@ -108,7 +88,7 @@ struct FVotePlayer
 	GENERATED_BODY()
 
 	UPROPERTY()
-	TArray<FString> MostVotePlayer;
+	TArray<FString> most_voted;
 };
 
 USTRUCT(BlueprintType)
@@ -117,9 +97,9 @@ struct FCheckAnswer
 	GENERATED_BODY()
 
 	UPROPERTY()
-	bool Answer;
+	bool answer;
 	UPROPERTY()
-	bool Liar;
+	bool liar;
 };
 
 USTRUCT(BlueprintType)
@@ -128,9 +108,9 @@ struct FCheckAIAnswer
 	GENERATED_BODY()
 
 	UPROPERTY()
-	bool Answer;
+	bool answer;
 	UPROPERTY()
-	bool Liar;
+	bool liar;
 };
 
 USTRUCT(BlueprintType)
@@ -139,9 +119,9 @@ struct FPlayersStates
 	GENERATED_BODY()
 
 	UPROPERTY()
-	FString Keyword; // 유저의 키워드
+	FString keyword; // 유저의 키워드
 	UPROPERTY()
-	bool bIsLiar; // 유저가 라이어인지 여부
+	bool liar; // 유저가 라이어인지 여부
 };
 
 USTRUCT(BlueprintType)
@@ -150,9 +130,9 @@ struct FLobbyCheck
 	GENERATED_BODY()
 
 	UPROPERTY()
-	FString UserId;
+	FString user_id;
 	UPROPERTY()
-	TArray<FString> Room;
+	TArray<FString> room;
 };
 
 
