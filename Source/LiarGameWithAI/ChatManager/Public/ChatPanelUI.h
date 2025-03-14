@@ -31,8 +31,6 @@ public:
 
 	UFUNCTION()
 	void OnTextCommitted(const FText& InText, ETextCommit::Type CommitMethod);
-	
-	// ChatManager 참조
-	UPROPERTY()
+
 	AChatManager* ChatManager;
 };

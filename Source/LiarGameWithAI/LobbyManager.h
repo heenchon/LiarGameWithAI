@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TSubclassOf<class UGamePlayerWidget> WidgetPlayFactory;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TSubclassOf<class ALiarGameWithAICharacter> CharacterFactory;
+
 	UPROPERTY(VisibleAnywhere)
 	class UGamePlayerWidget* StartWidget;
 

@@ -12,7 +12,7 @@ void AChatPlayerController::BeginPlay()
 
 	if (IsLocalPlayerController())
 	{
-		chatPanel = CreateWidget<UChatPanelUI>(this, UChatPanelUIClass);
+		UChatPanelUI* chatPanel = CreateWidget<UChatPanelUI>(this, UChatPanelUIClass);
 		chatPanel->SetOwningPlayer(this);
 	}
 		
