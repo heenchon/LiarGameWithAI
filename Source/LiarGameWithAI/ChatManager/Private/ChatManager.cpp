@@ -108,8 +108,8 @@ void AChatManager::IsSentence_Implementation(const FString& UserId, const FStrin
 				{
 					// 문장으로 판별된 경우
 					FValidSentenceResponse SentenceData;
-					SentenceData.UserID = JsonObject->GetStringField("user_id");
-					SentenceData.Word = JsonObject->GetStringField("word");
+					SentenceData.UserID = JsonObject->GetStringField(TEXT("user_id"));
+					SentenceData.Word = JsonObject->GetStringField(TEXT("word"));
 
 					UE_LOG(LogTemp, Log, TEXT("Valid Sentence - User: %s, Word: %s"),
 						   *SentenceData.UserID, *SentenceData.Word);
