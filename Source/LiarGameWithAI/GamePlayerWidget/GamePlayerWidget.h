@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "LiarGameWithAI/GameStartButton/GameStartButton.h"
 #include "GamePlayerWidget.generated.h"
 
 /**

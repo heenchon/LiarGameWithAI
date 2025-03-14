@@ -20,7 +20,7 @@ void UGamePlayerWidget::NativeConstruct()
 	{
 		PlayerStart->OnClicked.AddDynamic(this, &UGamePlayerWidget::OnPlayerStartClicked);
 	}
-
+	
 	for (TActorIterator<AActor> It(GetWorld()); It; ++It)
 	{
 		if (auto Manager = Cast<ALobbyManager>(*It))
@@ -28,6 +28,9 @@ void UGamePlayerWidget::NativeConstruct()
 			LobbyManager = Manager;
 		}
 	}
+
+	
+	
 }
 
 void UGamePlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)

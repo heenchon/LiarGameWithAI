@@ -47,6 +47,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	class UGamePlayerWidget* StartWidget;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TSubclassOf<class UGameStartButton> StartButtonFactory;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class UGameStartButton* StartButton;
+
 	FString MyUserId;
 
 	bool bIamHost;

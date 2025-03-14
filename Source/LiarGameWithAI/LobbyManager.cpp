@@ -29,12 +29,17 @@ void ALobbyManager::BeginPlay()
 			ChatManager = Manager;
 		}
 	}
+
+	StartButton = CreateWidget<UGameStartButton>(GetWorld(), StartButtonFactory);
+	if (StartButton)
+	{
+		StartButton->AddToViewport();
+	}
 	
 	StartWidget = CreateWidget<UGamePlayerWidget>(GetWorld(), WidgetPlayFactory);
-	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::BeginPlay"));
 	if (StartWidget)
 	{
-		StartWidget->AddToPlayerScreen();
+		StartWidget->AddToViewport();
 	}
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	PlayerController->bShowMouseCursor = true;
@@ -60,21 +65,8 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 	MyUserId = LobbyData.user_id;
 
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	// FActorSpawnParameters SpawnParams;
-	// SpawnParams.Owner = this;
-	// SpawnParams.Instigator = GetInstigator();
 
 	StartWidget->RemoveFromParent();
-
-	// for (int32 i = 0; i < 5; i++)
-	// {
-	// 	FRotator rot = FRotator(0,i*60,0);
-	// 	FVector RotLocation = GetActorLocation() + rot.Vector() *500;
-	// 	FRotator MiRot = rot + FRotator(0,180,0);
-	// 	ALiarGameWithAICharacter* Player = GetWorld()->SpawnActor<ALiarGameWithAICharacter>(
-	// 	CharacterFactory, RotLocation, rot);
-	// 	Player->SetActorRotation(MiRot);
-	// }
 	
 	bIamHost = LobbyData.is_host;
 	
