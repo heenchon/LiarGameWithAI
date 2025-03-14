@@ -29,15 +29,20 @@ public:
 	void EnterLobby();
 	
 	void EnterLobbyCompleted(const FLobbyResponse& LobbyData);
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TSubclassOf<class UGamePlayerWidget> WidgetPlayFactory;
-
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TSubclassOf<class ALiarGameWithAICharacter> CharacterFactory;
 
-	UPROPERTY(VisibleAnywhere)
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TSubclassOf<class UGamePlayerWidget> WidgetPlayFactory;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	class UGamePlayerWidget* StartWidget;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TSubclassOf<class UGameStartButton> StartButtonFactory;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	class UGameStartButton* StartButton;
 
 	FString MyUserId;
 	
