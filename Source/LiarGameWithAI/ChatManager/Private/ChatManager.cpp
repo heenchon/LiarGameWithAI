@@ -616,17 +616,17 @@ void AChatManager::StartCheck_Implementation()
 	// 서버에게 요청을 한 후 응답이 오면 호출되는 함수 등록
 	httpRequest->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully)
 	{
-		// 응답 본문을 문자열로 가져옴
-		FString ResponseContent = Response->GetContentAsString();
-		UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
-
-		// 응답이 "true" 또는 "false"인지 확인
-		bool bGameStarted = ResponseContent.Equals(TEXT("true"), ESearchCase::IgnoreCase);
-        
-		if (bGameStarted)
+		if (bProcessedSuccessfully)
 		{
-			UE_LOG(LogTemp, Log, TEXT("게임이 시작되었습니다."));
-			// 게임 시작 로직 처리
+			FString ResponseContent = Response->GetContentAsString();
+			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
+			FGameInfo GameData;
+			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &GameData, 0, 0);
+
+			if (LobbyManager)
+			{
+				LobbyManager->StartGameCompleted(GameData);
+			}
 		}
 		else
 		{
@@ -655,6 +655,11 @@ void AChatManager::GameStart_Implementation()
 			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
 			FGameInfo GameData;
 			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &GameData, 0, 0);
+
+			if (LobbyManager)
+			{
+				LobbyManager->StartGameCompleted(GameData);
+			}
 		}
 		// 실패
 		else

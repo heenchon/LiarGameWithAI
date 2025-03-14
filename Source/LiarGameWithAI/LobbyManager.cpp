@@ -4,8 +4,12 @@
 #include "LobbyManager.h"
 
 #include "EngineUtils.h"
+#include "LairGameInstance.h"
 #include "LiarGameWithAICharacter.h"
 #include "ChatManager/Public/ChatManager.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
+#include "LiarGameWithAI/LiarGameInfo.h"
 
 // Sets default values
 ALobbyManager::ALobbyManager()
@@ -28,10 +32,9 @@ void ALobbyManager::BeginPlay()
 	}
 	
 	StartWidget = CreateWidget<UGamePlayerWidget>(GetWorld(), WidgetPlayFactory);
-	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::BeginPlay"));
 	if (StartWidget)
 	{
-		StartWidget->AddToPlayerScreen();
+		StartWidget->AddToViewport();
 	}
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	PlayerController->bShowMouseCursor = true;
@@ -57,21 +60,10 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 	MyUserId = LobbyData.user_id;
 
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	// FActorSpawnParameters SpawnParams;
-	// SpawnParams.Owner = this;
-	// SpawnParams.Instigator = GetInstigator();
 
 	StartWidget->RemoveFromParent();
-
-	// for (int32 i = 0; i < 5; i++)
-	// {
-	// 	FRotator rot = FRotator(0,i*60,0);
-	// 	FVector RotLocation = GetActorLocation() + rot.Vector() *500;
-	// 	FRotator MiRot = rot + FRotator(0,180,0);
-	// 	ALiarGameWithAICharacter* Player = GetWorld()->SpawnActor<ALiarGameWithAICharacter>(
-	// 	CharacterFactory, RotLocation, rot);
-	// 	Player->SetActorRotation(MiRot);
-	// }
+	
+	bIamHost = LobbyData.is_host;
 	
 	if (LobbyData.room.Num() > 1)
 	{
@@ -94,10 +86,110 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 			CharacterFactory, RotLocation, MiRot);
 			Player->SetActorRotation(MiRot);
 			Player->SetUserId(LobbyData.room[i], false);
+			Players.Add(LobbyData.room[i]);
 		}
 	}
 	
-	// 플레이어들을 받아서
-	// 필드에 소환
+	GetWorld()->
+	GetTimerManager()
+	.SetTimer(
+		LobbyCheckTimerHandle,
+		[this] ()
+		{
+			ChatManager->LobbyCheck();
+		},
+		0.25f,
+		true
+	);
+
+	if (LobbyData.is_host)
+	{
+		StartButton = CreateWidget<UGameStartButton>(GetWorld(), StartButtonFactory);
+		if (StartButton)
+		{
+			StartButton->AddToViewport();
+			StartButton->LastButton->OnClicked.AddDynamic(this, &ALobbyManager::StartGame);
+		}
+		ChatManager->SendKeywords(TEXT("고양이"), TEXT("호랑이"));
+	}
+	else
+	{
+		GetWorld()->
+		GetTimerManager()
+		.SetTimer(
+			StartCheckTimerHandle,
+			[this] ()
+			{
+				ChatManager->StartCheck();
+			},
+			0.25f,
+			true
+		);
+	}
 }
+
+void ALobbyManager::LobbyCheckCompleted(const FLobbyResponse& LobbyData)
+{
+	if (LobbyData.room.Num() > 1)
+	{
+		for (int32 i = 0; i < LobbyData.room.Num(); i++)
+		{
+			if (Players.Find(LobbyData.room[i]))
+			{
+				continue;
+			}
+			// 플레이어 소환
+			//LobbyData.Room[i];
+			FRotator rot = FRotator(0,i*60,0);
+			FRotator MiRot = rot + FRotator(0,180,0);
+			FVector RotLocation = GetActorLocation() + rot.Vector()*500;
+			ALiarGameWithAICharacter* Player = GetWorld()->SpawnActor<ALiarGameWithAICharacter>(
+			CharacterFactory, RotLocation, MiRot);
+			Player->SetActorRotation(MiRot);
+			Player->SetUserId(LobbyData.room[i], false);
+			Players.Add(LobbyData.room[i]);
+		}
+	}
+}
+
+void ALobbyManager::StartCheckCompleted(const FGameInfo& GameData)
+{
+	GetWorld()->GetTimerManager().ClearTimer(LobbyCheckTimerHandle);
+	LobbyCheckTimerHandle.Invalidate();
+
+	GetWorld()->GetTimerManager().ClearTimer(StartCheckTimerHandle);
+	StartCheckTimerHandle.Invalidate();
+	
+	ULairGameInstance* GameInstance = Cast<ULairGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->GameInfo = GameData;
+	}
+
+	UGameplayStatics::OpenLevel(GetWorld(), FName("GameMap"));
+}
+
+
+void ALobbyManager::StartGame()
+{
+	if (ChatManager)
+	{
+		ChatManager->GameStart();
+	}
+}
+
+void ALobbyManager::StartGameCompleted(const FGameInfo& GameData)
+{
+	GetWorld()->GetTimerManager().ClearTimer(LobbyCheckTimerHandle);
+	LobbyCheckTimerHandle.Invalidate();
+	
+	ULairGameInstance* GameInstance = Cast<ULairGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->GameInfo = GameData;
+	}
+
+	UGameplayStatics::OpenLevel(GetWorld(), FName("GameMap"));
+}
+
 

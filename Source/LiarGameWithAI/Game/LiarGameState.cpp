@@ -11,22 +11,6 @@
 void ALiarGameState::BeginPlay()
 {
 	Super::BeginPlay();
-
-	for (TActorIterator<AChair> It(GetWorld()); It; ++It)
-	{
-		Chairs.Add(*It);
-	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("%d"), Chairs.Num());
-
-	// TODO: ChatManager 스폰
-
-	// 게임의 전체를 비춰주는 카메라 찾기
-	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (PC)
-	{
-		CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
-	}
 }
 
 void ALiarGameState::LiarTest()
@@ -35,7 +19,7 @@ void ALiarGameState::LiarTest()
 
 	TArray<FPlayerInfo> Players;
 	
-	for (int32 i = 0; i < 6; i++)
+	for (int32 i = 0; i < 3; i++)
 	{
 		FPlayerInfo info = 
 		{
@@ -47,33 +31,17 @@ void ALiarGameState::LiarTest()
 		Players.Add(info);
 	}
 	
-	TestInfo.players = Players;
-	TestInfo.common_keyword = TEXT("딸기");
-	TestInfo.lair_keyword = TEXT("바나나");
+	// TestInfo.players = Players;
+	// TestInfo.common_keyword = TEXT("딸기");
+	// TestInfo.lair_keyword = TEXT("바나나");
 
 	GameStart();
 }
 
 void ALiarGameState::GameStart()
 {
-	// TODO: ChatManager에게 게임의 정보를 요청하자
-
-	// 받은 데이터를 가지고 매니저 initialize하자
-	// 라운드 시작하자 -> 1번째부터 시작!
-
-	// TODO: 임시 테스트.. 나중에 수정할 것
-	TestInfo.players.Sort([](const FPlayerInfo& A, const FPlayerInfo& B)
-	{
-		return A.order < B.order;
-	});
-	
-	for (int32 i = 0; i < TestInfo.players.Num(); i++)
-	{
-		PlayerList.Add(TestInfo.players[i]);
-	}
-	
 	InitPlayer();
-	InitKeyword(TestInfo.common_keyword, TestInfo.lair_keyword);
+	// InitKeyword(TestInfo.common_keyword, TestInfo.lair_keyword);
 	ShowKeyword();
 	Round();
 }
@@ -90,17 +58,13 @@ void ALiarGameState::Round()
 		return;
 	}
 	
-	if (CurrentOrder == 6)
+	if (CurrentOrder == 3)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("다음 라운드!"));
 		CurrentOrder = 0;
-		
-		InitKeyword(TestInfo.common_keyword, TestInfo.lair_keyword);
 		ShowKeyword();
 		
 		++CurRound;
-		Round();
-		return;
 	}
 		
 	// order에 해당하는 Player를 향해 카메라를 돌린다
@@ -112,30 +76,26 @@ void ALiarGameState::Round()
 	++CurrentOrder;
 }
 
-void ALiarGameState::UpdateCameraByOrder(int order)
-{
-	AChair* curChair = Chairs[order];
-	FVector chairLoc = curChair->GetActorLocation();
-	FRotator chairRot = curChair->GetActorRotation();
-	
-	UE_LOG(LogTemp, Warning, TEXT("순서에 해당하는 의자: %s"), *curChair->GetActorNameOrLabel());
-	
-	FVector newLoc = FVector(0,0,110);
-	FRotator newRot = chairRot+ FRotator(0,360-60*CurrentOrder,0); 
-	
-	//UE_LOG(LogTemp, Warning, TEXT("위치: %s"), *newLoc.ToString());;
-	//UE_LOG(LogTemp, Warning, TEXT("회전: %s"), *newRot.ToString());;
-	
-	CameraActor->SetActorLocation(newLoc);
-	CameraActor->SetActorRotation(newRot);
-}
-
 void ALiarGameState::InitPlayer()
 {
 	if (PlayerList.IsEmpty())
 	{
 		UE_LOG(LogTemp,Warning,TEXT("플레이어 리스트 Empty"));
 		return;
+	}
+
+	for (TActorIterator<AChair> It(GetWorld()); It; ++It)
+	{
+		Chairs.Add(*It);
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("%d"), Chairs.Num());
+
+	// 게임의 전체를 비춰주는 카메라 찾기
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
 	}
 
 	ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
@@ -150,8 +110,8 @@ void ALiarGameState::InitPlayer()
 		if (MyPlayer->UserId == info.id)
 		{
 			IamLiar = info.liar;
-			MyPlayer->SetSitAnim();
 			MyPlayer->SetActorTransform(Chairs[i]->SitPosition->GetComponentTransform());
+			MyPlayer->SetSitAnim();
 			continue;
 		}
 	
@@ -176,6 +136,24 @@ void ALiarGameState::ShowKeyword()
 	ScreenLog(Msg);
 }
 
+void ALiarGameState::UpdateCameraByOrder(int order)
+{
+	AChair* curChair = Chairs[order];
+	FVector chairLoc = curChair->GetActorLocation();
+	FRotator chairRot = curChair->GetActorRotation();
+	
+	UE_LOG(LogTemp, Warning, TEXT("순서에 해당하는 의자: %s"), *curChair->GetActorNameOrLabel());
+	
+	FVector newLoc = FVector(0,0,110);
+	FRotator newRot = chairRot+ FRotator(0,360-60*CurrentOrder,0); 
+	
+	//UE_LOG(LogTemp, Warning, TEXT("위치: %s"), *newLoc.ToString());;
+	//UE_LOG(LogTemp, Warning, TEXT("회전: %s"), *newRot.ToString());;
+	
+	CameraActor->SetActorLocation(newLoc);
+	CameraActor->SetActorRotation(newRot);
+}
+
 void ALiarGameState::CollectAnswers(int order)
 {
 	ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
@@ -187,6 +165,10 @@ void ALiarGameState::CollectAnswers(int order)
 	{
 		InputAnswer();
 	}
+	else if (CurrentOrder == 2)
+	{
+		//TODO: ai한테 제시어 받기
+	}
 	else
 	{
 		WaitingOthersAnswer();
@@ -195,7 +177,7 @@ void ALiarGameState::CollectAnswers(int order)
 
 void ALiarGameState::InputAnswer()
 {
-	//TODO: ai에게 입력 검사 받기
+	ChatManager->
 	ScreenLog("Type short explanation of the keyword");
 }
 
@@ -215,7 +197,7 @@ void ALiarGameState::VotingStart()
 void ALiarGameState::CollectVotes()
 {
 	++CurrentOrder;
-	if (CurrentOrder == 6)
+	if (CurrentOrder == 3)
 	{
 		ScreenLog("투표 끝!");
 		VotingEnd();
@@ -228,6 +210,10 @@ void ALiarGameState::CollectVotes()
 	if (MyPlayer->UserId == PlayerList[CurrentOrder].id)
 	{
 		Vote();
+	}
+	else if (CurrentOrder == 2)
+	{
+		//TODO:ai 투표 받기
 	}
 	else
 	{
@@ -255,4 +241,25 @@ void ALiarGameState::ScreenLog(const FString& string)
 {
 	FString Msg = FString::Printf(TEXT("%s"), *string);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, Msg);
+}
+
+void ALiarGameState::Initialize(FGameInfo info)
+{
+	// TODO: ChatManager에게 게임의 정보를 요청하자
+	
+	// 받은 데이터를 가지고 매니저 initialize하자
+	// 라운드 시작하자 -> 1번째부터 시작!
+	
+	info.players.Sort([](const FPlayerInfo& A, const FPlayerInfo& B)
+	{
+		return A.order < B.order;
+	});
+	
+	for (int32 i = 0; i < info.players.Num(); i++)
+	{
+		PlayerList.Add(info.players[i]);
+	}
+	
+	InitKeyword(info.common_keyword, info.lair_keyword);
+	GameStart();
 }
