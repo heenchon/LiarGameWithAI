@@ -23,6 +23,9 @@ class LIARGAMEWITHAI_API UGamePlayerWidget : public UUserWidget
 	
 	float CurrentTime = 0.0f;
 
+	UPROPERTY()
+	class ALobbyManager* LobbyManager;
+
 	UFUNCTION()
 	void OnPlayerStartClicked();
 

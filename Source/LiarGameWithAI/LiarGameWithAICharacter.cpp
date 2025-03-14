@@ -91,6 +91,8 @@ void ALiarGameWithAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Anim = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+
 	// TODO: Test code 서버 통신 작업시 지울 것
 	SetUserId(TEXT("Test0"), true);
 }
@@ -99,7 +101,7 @@ void ALiarGameWithAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	SetWidgetNameRot();
+	//SetWidgetNameRot();
 	// if (GetWorld()->GetFirstPlayerController()->WasInputKeyJustPressed(EKeys::R))
 	// {
 	// 	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::Tick"));
@@ -216,5 +218,13 @@ void ALiarGameWithAICharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ALiarGameWithAICharacter::SetSitAnim()
+{
+	if (Anim)
+	{
+		Anim->bSitting = true;
 	}
 }

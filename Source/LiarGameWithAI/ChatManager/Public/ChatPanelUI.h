@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ChatManager.h"
 #include "Blueprint/UserWidget.h"
 #include "ChatPanelUI.generated.h"
 
@@ -14,16 +15,24 @@ class LIARGAMEWITHAI_API UChatPanelUI : public UUserWidget
 {
 	GENERATED_BODY()
 
-	public:
+public:
+	virtual void NativeConstruct();
 
+	//Widget 뷰포트에
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> UChatUIClass;
+	
 	UPROPERTY(meta = (BindWidget))
 	class UScrollBox* ChatScrollBox;
 	UPROPERTY(meta = (BindWidget))
 	class UEditableTextBox* ChatInputBox;
 
-	virtual void NativeConstruct();
-	void UpdateChat(FText PlayerName, FText Chat);
+	void UpdateChat(const FText& PlayerName, const FText& Chat);
 
 	UFUNCTION()
 	void OnTextCommitted(const FText& InText, ETextCommit::Type CommitMethod);
+	
+	// ChatManager 참조
+	UPROPERTY()
+	AChatManager* ChatManager;
 };

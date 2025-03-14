@@ -146,6 +146,7 @@ void ALiarGameState::InitPlayer()
 		if (MyPlayer->UserId == info.id)
 		{
 			IamLiar = info.liar;
+			MyPlayer->SetSitAnim();
 			MyPlayer->SetActorTransform(Chairs[i]->SitPosition->GetComponentTransform());
 			continue;
 		}
