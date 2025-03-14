@@ -40,22 +40,6 @@ void ALiarGameState::LiarTest()
 
 void ALiarGameState::GameStart()
 {
-	// // TODO: ChatManager에게 게임의 정보를 요청하자
-	//
-	// // 받은 데이터를 가지고 매니저 initialize하자
-	// // 라운드 시작하자 -> 1번째부터 시작!
-	//
-	// // TODO: 임시 테스트.. 나중에 수정할 것
-	// TestInfo.players.Sort([](const FPlayerInfo& A, const FPlayerInfo& B)
-	// {
-	// 	return A.order < B.order;
-	// });
-	//
-	// for (int32 i = 0; i < TestInfo.players.Num(); i++)
-	// {
-	// 	PlayerList.Add(TestInfo.players[i]);
-	// }
-	
 	InitPlayer();
 	// InitKeyword(TestInfo.common_keyword, TestInfo.lair_keyword);
 	ShowKeyword();
@@ -78,8 +62,6 @@ void ALiarGameState::Round()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("다음 라운드!"));
 		CurrentOrder = 0;
-		
-		// InitKeyword(TestInfo.common_keyword, TestInfo.lair_keyword);
 		ShowKeyword();
 		
 		++CurRound;
@@ -108,8 +90,6 @@ void ALiarGameState::InitPlayer()
 	}
 	
 	UE_LOG(LogTemp, Warning, TEXT("%d"), Chairs.Num());
-
-	// TODO: ChatManager 스폰
 
 	// 게임의 전체를 비춰주는 카메라 찾기
 	APlayerController* PC = GetWorld()->GetFirstPlayerController();
@@ -197,7 +177,7 @@ void ALiarGameState::CollectAnswers(int order)
 
 void ALiarGameState::InputAnswer()
 {
-	//TODO: ai에게 입력 검사 받기
+	ChatManager->
 	ScreenLog("Type short explanation of the keyword");
 }
 
