@@ -19,7 +19,7 @@ void ALiarGameState::LiarTest()
 
 	TArray<FPlayerInfo> Players;
 	
-	for (int32 i = 0; i < 6; i++)
+	for (int32 i = 0; i < 3; i++)
 	{
 		FPlayerInfo info = 
 		{
@@ -74,7 +74,7 @@ void ALiarGameState::Round()
 		return;
 	}
 	
-	if (CurrentOrder == 6)
+	if (CurrentOrder == 3)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("다음 라운드!"));
 		CurrentOrder = 0;
@@ -83,8 +83,6 @@ void ALiarGameState::Round()
 		ShowKeyword();
 		
 		++CurRound;
-		Round();
-		return;
 	}
 		
 	// order에 해당하는 Player를 향해 카메라를 돌린다
@@ -94,24 +92,6 @@ void ALiarGameState::Round()
 	CollectAnswers(CurrentOrder);
 	
 	++CurrentOrder;
-}
-
-void ALiarGameState::UpdateCameraByOrder(int order)
-{
-	AChair* curChair = Chairs[order];
-	FVector chairLoc = curChair->GetActorLocation();
-	FRotator chairRot = curChair->GetActorRotation();
-	
-	UE_LOG(LogTemp, Warning, TEXT("순서에 해당하는 의자: %s"), *curChair->GetActorNameOrLabel());
-	
-	FVector newLoc = FVector(0,0,110);
-	FRotator newRot = chairRot+ FRotator(0,360-60*CurrentOrder,0); 
-	
-	//UE_LOG(LogTemp, Warning, TEXT("위치: %s"), *newLoc.ToString());;
-	//UE_LOG(LogTemp, Warning, TEXT("회전: %s"), *newRot.ToString());;
-	
-	CameraActor->SetActorLocation(newLoc);
-	CameraActor->SetActorRotation(newRot);
 }
 
 void ALiarGameState::InitPlayer()
@@ -176,6 +156,24 @@ void ALiarGameState::ShowKeyword()
 	ScreenLog(Msg);
 }
 
+void ALiarGameState::UpdateCameraByOrder(int order)
+{
+	AChair* curChair = Chairs[order];
+	FVector chairLoc = curChair->GetActorLocation();
+	FRotator chairRot = curChair->GetActorRotation();
+	
+	UE_LOG(LogTemp, Warning, TEXT("순서에 해당하는 의자: %s"), *curChair->GetActorNameOrLabel());
+	
+	FVector newLoc = FVector(0,0,110);
+	FRotator newRot = chairRot+ FRotator(0,360-60*CurrentOrder,0); 
+	
+	//UE_LOG(LogTemp, Warning, TEXT("위치: %s"), *newLoc.ToString());;
+	//UE_LOG(LogTemp, Warning, TEXT("회전: %s"), *newRot.ToString());;
+	
+	CameraActor->SetActorLocation(newLoc);
+	CameraActor->SetActorRotation(newRot);
+}
+
 void ALiarGameState::CollectAnswers(int order)
 {
 	ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
@@ -186,6 +184,10 @@ void ALiarGameState::CollectAnswers(int order)
 	if (MyPlayer->UserId == PlayerList[CurrentOrder].id)
 	{
 		InputAnswer();
+	}
+	else if (CurrentOrder == 2)
+	{
+		//TODO: ai한테 제시어 받기
 	}
 	else
 	{
@@ -215,7 +217,7 @@ void ALiarGameState::VotingStart()
 void ALiarGameState::CollectVotes()
 {
 	++CurrentOrder;
-	if (CurrentOrder == 6)
+	if (CurrentOrder == 3)
 	{
 		ScreenLog("투표 끝!");
 		VotingEnd();
@@ -228,6 +230,10 @@ void ALiarGameState::CollectVotes()
 	if (MyPlayer->UserId == PlayerList[CurrentOrder].id)
 	{
 		Vote();
+	}
+	else if (CurrentOrder == 2)
+	{
+		//TODO:ai 투표 받기
 	}
 	else
 	{
