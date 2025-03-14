@@ -90,11 +90,6 @@ void ALiarGameWithAICharacter::NotifyControllerChanged()
 void ALiarGameWithAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Anim = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
-
-	// TODO: Test code 서버 통신 작업시 지울 것
-	SetUserId(TEXT("Test0"), true);
 }
 
 void ALiarGameWithAICharacter::Tick(float DeltaTime)

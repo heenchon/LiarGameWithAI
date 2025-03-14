@@ -54,7 +54,7 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 
 	
 	// 지급 받은 내아이디 캐싱
-	MyUserId = LobbyData.UserID;
+	MyUserId = LobbyData.user_id;
 
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	// FActorSpawnParameters SpawnParams;
@@ -62,11 +62,6 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 	// SpawnParams.Instigator = GetInstigator();
 
 	StartWidget->RemoveFromParent();
-	
-	if (ALiarGameWithAICharacter* Player = Cast<ALiarGameWithAICharacter>( PlayerController->GetCharacter()))
-	{
-		Player->SetUserId(MyUserId, true);
-	}
 
 	// for (int32 i = 0; i < 5; i++)
 	// {
@@ -78,12 +73,16 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 	// 	Player->SetActorRotation(MiRot);
 	// }
 	
-	if (LobbyData.Room.Num() > 1)
+	if (LobbyData.room.Num() > 1)
 	{
-		for (int32 i = 0; i < LobbyData.Room.Num(); i++)
+		for (int32 i = 0; i < LobbyData.room.Num(); i++)
 		{
-			if (LobbyData.Room[i] == MyUserId)
+			if (LobbyData.room[i] == MyUserId)
 			{
+				if (ALiarGameWithAICharacter* Player = Cast<ALiarGameWithAICharacter>( PlayerController->GetCharacter()))
+				{
+					Player->SetUserId(MyUserId, true);
+				}
 				continue;
 			}
 			// 플레이어 소환
@@ -94,6 +93,7 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 			ALiarGameWithAICharacter* Player = GetWorld()->SpawnActor<ALiarGameWithAICharacter>(
 			CharacterFactory, RotLocation, MiRot);
 			Player->SetActorRotation(MiRot);
+			Player->SetUserId(LobbyData.room[i], false);
 		}
 	}
 	
