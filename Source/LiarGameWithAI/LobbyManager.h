@@ -28,6 +28,7 @@ public:
 
 	void EnterLobby();
 
+	UFUNCTION()
 	void StartGame();
 	
 	void EnterLobbyCompleted(const FLobbyResponse& LobbyData);

@@ -13,8 +13,8 @@ UCLASS()
 class LIARGAMEWITHAI_API UGameStartButton : public UUserWidget
 {
 	GENERATED_BODY()
-//
-// public:
-// 	UPROPERTY(meta = (BindWidget))
-// 	class UButton* LastStartButton;
+
+public:
+	UPROPERTY(meta = (BindWidget))
+	class UButton* LastButton;
 };

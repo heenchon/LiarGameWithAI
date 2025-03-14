@@ -7,6 +7,7 @@
 #include "LairGameInstance.h"
 #include "LiarGameWithAICharacter.h"
 #include "ChatManager/Public/ChatManager.h"
+#include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "LiarGameWithAI/LiarGameInfo.h"
 
@@ -28,12 +29,6 @@ void ALobbyManager::BeginPlay()
 		{
 			ChatManager = Manager;
 		}
-	}
-
-	StartButton = CreateWidget<UGameStartButton>(GetWorld(), StartButtonFactory);
-	if (StartButton)
-	{
-		StartButton->AddToViewport();
 	}
 	
 	StartWidget = CreateWidget<UGamePlayerWidget>(GetWorld(), WidgetPlayFactory);
@@ -109,6 +104,12 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 
 	if (LobbyData.is_host)
 	{
+		StartButton = CreateWidget<UGameStartButton>(GetWorld(), StartButtonFactory);
+		if (StartButton)
+		{
+			StartButton->AddToViewport();
+			StartButton->LastButton->OnClicked.AddDynamic(this, &ALobbyManager::StartGame);
+		}
 		ChatManager->SendKeywords(TEXT("고양이"), TEXT("호랑이"));
 	}
 	else
@@ -153,6 +154,12 @@ void ALobbyManager::LobbyCheckCompleted(const FLobbyResponse& LobbyData)
 
 void ALobbyManager::StartCheckCompleted(const FGameInfo& GameData)
 {
+	GetWorld()->GetTimerManager().ClearTimer(LobbyCheckTimerHandle);
+	LobbyCheckTimerHandle.Invalidate();
+
+	GetWorld()->GetTimerManager().ClearTimer(StartCheckTimerHandle);
+	StartCheckTimerHandle.Invalidate();
+	
 	ULairGameInstance* GameInstance = Cast<ULairGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
@@ -162,12 +169,20 @@ void ALobbyManager::StartCheckCompleted(const FGameInfo& GameData)
 	UGameplayStatics::OpenLevel(GetWorld(), FName("GameMap"));
 }
 
+
 void ALobbyManager::StartGame()
 {
+	if (ChatManager)
+	{
+		ChatManager->GameStart();
+	}
 }
 
 void ALobbyManager::StartGameCompleted(const FGameInfo& GameData)
 {
+	GetWorld()->GetTimerManager().ClearTimer(LobbyCheckTimerHandle);
+	LobbyCheckTimerHandle.Invalidate();
+	
 	ULairGameInstance* GameInstance = Cast<ULairGameInstance>(GetGameInstance());
 	if (GameInstance)
 	{
