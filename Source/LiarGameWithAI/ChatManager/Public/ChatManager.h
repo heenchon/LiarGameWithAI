@@ -150,10 +150,12 @@ USTRUCT(BlueprintType)
 struct FLobbyCheck
 {
 	GENERATED_BODY()
-	
+
+	UPROPERTY()
+	FString UserId;
+	UPROPERTY()
+	TArray<FString> Room;
 };
-
-
 
 
 

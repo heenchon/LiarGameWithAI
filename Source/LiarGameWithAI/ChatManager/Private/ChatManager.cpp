@@ -195,7 +195,7 @@ void AChatManager::LobbyCheck_Implementation()
 	httpRequest->SetURL(TEXT("http://192.168.20.118:8088/lobby_check"));
 	httpRequest->SetVerb(TEXT("GET"));
 	httpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
-
+	
 	// 서버에게 요청을 한 후 응답이 오면 호출되는 함수 등록
 	httpRequest->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully)
 	{
@@ -203,10 +203,12 @@ void AChatManager::LobbyCheck_Implementation()
 		// 성공
 		if (bProcessedSuccessfully)
 		{
+			// 응답 출력
 			FString ResponseContent = Response->GetContentAsString();
 			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
+			
 			FLobbyResponse LobbyData;
-			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &LobbyData, 0, 0);		
+			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &LobbyData, 0, 0);
 		}
 		// 실패
 		else
@@ -593,7 +595,33 @@ void AChatManager::DevClear_Implementation()
 
 void AChatManager::StartCheck_Implementation()
 {
-	
+	// 서버에게 요청하는 객체
+	FHttpRequestRef httpRequest = FHttpModule::Get().CreateRequest();
+	httpRequest->SetURL(TEXT("http://192.168.20.118:8088/start_check"));
+	httpRequest->SetVerb(TEXT("GET"));
+	httpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
+
+	// 서버에게 요청을 한 후 응답이 오면 호출되는 함수 등록
+	httpRequest->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully)
+	{
+		// 응답 본문을 문자열로 가져옴
+		FString ResponseContent = Response->GetContentAsString();
+		UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
+
+		// 응답이 "true" 또는 "false"인지 확인
+		bool bGameStarted = ResponseContent.Equals(TEXT("true"), ESearchCase::IgnoreCase);
+        
+		if (bGameStarted)
+		{
+			UE_LOG(LogTemp, Log, TEXT("게임이 시작되었습니다."));
+			// 게임 시작 로직 처리
+		}
+		else
+		{
+			UE_LOG(LogTemp, Log, TEXT("게임이 시작되지 않았습니다."));
+			// 게임 시작 전 로직 처리
+		}
+	});
 }
 
 // AI에게 채팅 내용 전달
