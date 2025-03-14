@@ -68,6 +68,16 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 		Player->SetUserId(MyUserId, true);
 	}
 
+	// for (int32 i = 0; i < 5; i++)
+	// {
+	// 	FRotator rot = FRotator(0,i*60,0);
+	// 	FVector RotLocation = GetActorLocation() + rot.Vector() *500;
+	// 	FRotator MiRot = rot + FRotator(0,180,0);
+	// 	ALiarGameWithAICharacter* Player = GetWorld()->SpawnActor<ALiarGameWithAICharacter>(
+	// 	CharacterFactory, RotLocation, rot);
+	// 	Player->SetActorRotation(MiRot);
+	// }
+	
 	if (LobbyData.Room.Num() > 1)
 	{
 		for (int32 i = 0; i < LobbyData.Room.Num(); i++)
@@ -79,10 +89,11 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 			// 플레이어 소환
 			//LobbyData.Room[i];
 			FRotator rot = FRotator(0,i*60,0);
-			FVector RotLocation = GetActorLocation() + FVector(1,0,0) * rot.Vector()*500;
+			FRotator MiRot = rot + FRotator(0,180,0);
+			FVector RotLocation = GetActorLocation() + rot.Vector()*500;
 			ALiarGameWithAICharacter* Player = GetWorld()->SpawnActor<ALiarGameWithAICharacter>(
-			CharacterFactory, RotLocation, rot);
-			Player->SetActorRotation(rot);
+			CharacterFactory, RotLocation, MiRot);
+			Player->SetActorRotation(MiRot);
 		}
 	}
 	
