@@ -23,13 +23,11 @@ struct FLobbyResponse
 	GENERATED_BODY()
 
 	UPROPERTY()
-	FString UserID;
+	FString user_id;
 	UPROPERTY()
-	TArray<FString> Room;
+	TArray<FString> room;
 	UPROPERTY()
-	FString Host;
-	UPROPERTY()
-	bool Start;
+	bool is_host;
 };
 
 USTRUCT(BlueprintType)
