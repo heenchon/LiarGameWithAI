@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LiarPlayerState.h"
 #include "GameFramework/GameState.h"
 #include "LiarGameState.generated.h"
 
+class AChatManager;
 class ALiarPlayerState;
 /**
  * 
@@ -16,15 +18,25 @@ class LIARGAMEWITHAI_API ALiarGameState : public AGameState
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(Replicated)
-	TArray<ALiarPlayerState*> PlayerList;
-
-	UPROPERTY(Replicated)
-	ALiarPlayerState* LiarPlayer;
+	UPROPERTY()
+	AChatManager* ChatManager;
+	
+	// UPROPERTY(Replicated)
+	TArray<FPlayerInfo> PlayerList;
 	
 	UPROPERTY(Replicated)
-	TArray<AActor*> TeleportPoints;
+	TArray<ALiarPlayerState*> PlayerStates;
+	
+	// UPROPERTY(Replicated)
+	// ALiarPlayerState* LiarPlayer;
 
+	UPROPERTY()
+	TArray<class AChair*> Chairs;
+
+	FString common_keyword = "common";
+	FString liar_keyword = "liar";
+	
+	int CurRound = 0;
 
 protected:
 	virtual void BeginPlay() override;
@@ -33,11 +45,21 @@ protected:
 private:
 	UFUNCTION(NetMulticast, reliable)
 	void Multicast_GameStart();
+	UFUNCTION(NetMulticast, reliable)
+	void Multicast_Round();
 
 	UFUNCTION()
 	void SortPlayer();
 	UFUNCTION()
-	void InitPlayerInfo();
+	void InitPlayer();
+	void InitKeyword();
+	void ShowKeyword();
+
+	void CollectAnswers(int order);
+	void InputAnswer();
+	void WaitingOthersAnswer();
+	
+	void ScreenLog(const FString& string);
 	
 public:
 	UFUNCTION(Exec)

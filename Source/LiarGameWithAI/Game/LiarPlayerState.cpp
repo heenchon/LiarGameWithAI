@@ -15,3 +15,8 @@ void ALiarPlayerState::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void ALiarPlayerState::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+}

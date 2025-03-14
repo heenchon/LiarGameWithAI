@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
+#include "LiarGameWithAI/LiarGameInfo.h"
 #include "LiarGameModeBase.generated.h"
 
 class ALiarGameState;

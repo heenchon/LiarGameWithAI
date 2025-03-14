@@ -24,7 +24,16 @@ void AChair::BeginPlay()
 	Super::BeginPlay();
 
 	// Test...
+}
+
+void AChair::SpawnPlayer(FString userId, int32 order, bool isLair)
+{
+	UserId = userId;
+	Order = order;
+	IsLair = isLair;
+	
 	FActorSpawnParameters Params;
-	GetWorld()->SpawnActor<ALiarGameWithAICharacter>(PlayerFactory, SitPosition->GetComponentTransform(), Params);
+	ALiarGameWithAICharacter* Character = GetWorld()->SpawnActor<ALiarGameWithAICharacter>(PlayerFactory, SitPosition->GetComponentTransform(), Params);
+	Character->SetUserId(userId, false);
 }
 
