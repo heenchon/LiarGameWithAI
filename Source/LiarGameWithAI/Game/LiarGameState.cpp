@@ -11,22 +11,6 @@
 void ALiarGameState::BeginPlay()
 {
 	Super::BeginPlay();
-
-	for (TActorIterator<AChair> It(GetWorld()); It; ++It)
-	{
-		Chairs.Add(*It);
-	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("%d"), Chairs.Num());
-
-	// TODO: ChatManager 스폰
-
-	// 게임의 전체를 비춰주는 카메라 찾기
-	APlayerController* PC = GetWorld()->GetFirstPlayerController();
-	if (PC)
-	{
-		CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
-	}
 }
 
 void ALiarGameState::LiarTest()
@@ -138,6 +122,22 @@ void ALiarGameState::InitPlayer()
 		return;
 	}
 
+	for (TActorIterator<AChair> It(GetWorld()); It; ++It)
+	{
+		Chairs.Add(*It);
+	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("%d"), Chairs.Num());
+
+	// TODO: ChatManager 스폰
+
+	// 게임의 전체를 비춰주는 카메라 찾기
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
+	}
+
 	ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
 	ALiarGameWithAICharacter* MyPlayer = Cast<ALiarGameWithAICharacter>(My);
 
@@ -150,8 +150,8 @@ void ALiarGameState::InitPlayer()
 		if (MyPlayer->UserId == info.id)
 		{
 			IamLiar = info.liar;
-			MyPlayer->SetSitAnim();
 			MyPlayer->SetActorTransform(Chairs[i]->SitPosition->GetComponentTransform());
+			MyPlayer->SetSitAnim();
 			continue;
 		}
 	
