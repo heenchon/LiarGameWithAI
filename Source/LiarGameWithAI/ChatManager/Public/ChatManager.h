@@ -146,6 +146,15 @@ struct FPlayersStates
 	bool bIsLiar; // 유저가 라이어인지 여부
 };
 
+USTRUCT(BlueprintType)
+struct FLobbyCheck
+{
+	GENERATED_BODY()
+	
+};
+
+
+
 
 
 UCLASS()
@@ -168,8 +177,6 @@ public:
 	UFUNCTION(Server, Reliable)
 	void EnterLobby();
 	UFUNCTION(Server, Reliable)
-	void LobbyCheck();
-	UFUNCTION(Server, Reliable)
 	void SendKeywords(const FString& NormalKeyword, const FString& LiarKeyword);
 	UFUNCTION(Server, Reliable)
 	void RecieveKeywords();
@@ -185,6 +192,14 @@ public:
 	void CheckAIAnswer();
 	UFUNCTION(Server, Reliable)
 	void GameState();
+	
+	UFUNCTION(Server, Reliable)
+	void LobbyCheck();
+	UFUNCTION(Server, Reliable)
+	void DevClear();
+	UFUNCTION(Server, Reliable)
+	void StartCheck();
+	
 
 	// 서버에게 채팅 내용 보내기
 	UFUNCTION(Server, Reliable)
