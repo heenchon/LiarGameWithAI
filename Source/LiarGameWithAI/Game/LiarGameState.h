@@ -19,40 +19,41 @@ class LIARGAMEWITHAI_API ALiarGameState : public AGameState
 	
 public:
 	UPROPERTY()
+	ACameraActor* CameraActor;
+	
+	UPROPERTY()
 	AChatManager* ChatManager;
+
+	FGameInfo TestInfo;
 	
-	// UPROPERTY(Replicated)
 	TArray<FPlayerInfo> PlayerList;
-	
-	UPROPERTY(Replicated)
-	TArray<ALiarPlayerState*> PlayerStates;
-	
-	// UPROPERTY(Replicated)
-	// ALiarPlayerState* LiarPlayer;
 
 	UPROPERTY()
 	TArray<class AChair*> Chairs;
 
-	FString common_keyword = "common";
-	FString liar_keyword = "liar";
+	FString CommonKeyword = "common";
+	FString LairKeyword = "liar";
+
+	// 내가 라이어인가?
+	bool IamLiar = false;
 	
-	int CurRound = 0;
+	int32 CurRound = 0;
+	int32 CurrentOrder = 0;
+
+	TArray<FString> Answers; // 그동안 말한 단어 저장용
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 private:
-	UFUNCTION(NetMulticast, reliable)
-	void Multicast_GameStart();
-	UFUNCTION(NetMulticast, reliable)
-	void Multicast_Round();
-
 	UFUNCTION()
-	void SortPlayer();
+	void GameStart();
+	UFUNCTION()
+	void Round();
+	
 	UFUNCTION()
 	void InitPlayer();
-	void InitKeyword();
+	void InitKeyword(FString common, FString liar);
 	void ShowKeyword();
 
 	void CollectAnswers(int order);

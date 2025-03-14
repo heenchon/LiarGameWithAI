@@ -5,8 +5,8 @@
 
 #include "LiarPlayerState.h"
 #include "EngineUtils.h"
+#include "Camera/CameraActor.h"
 #include "LiarGameWithAI/Chair.h"
-#include "Net/UnrealNetwork.h"
 
 void ALiarGameState::BeginPlay()
 {
@@ -19,76 +19,72 @@ void ALiarGameState::BeginPlay()
 	
 	UE_LOG(LogTemp, Warning, TEXT("%d"), Chairs.Num());
 
-	//TODO: ChatManager 스폰
-}
+	// TODO: ChatManager 스폰
 
-void ALiarGameState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	
-	// DOREPLIFETIME(ALiarGameState, LiarPlayer);
-	// DOREPLIFETIME(ALiarGameState, PlayerList);
-
-	DOREPLIFETIME(ALiarGameState,PlayerStates);
+	// 게임의 전체를 비춰주는 카메라 찾기
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
+	}
 }
 
 void ALiarGameState::LiarTest()
 {
-	if (HasAuthority())
-	{
-		//ScreenLog(TEXT("Game Start!"));
-		
-		Multicast_GameStart();
-		Multicast_Round();
-		CurRound++;
-		//Multicast_Round();
-		//CurRound++;
-	}
-}
-
-void ALiarGameState::Multicast_GameStart_Implementation()
-{
 	// 임시데이터
 
+	TArray<FPlayerInfo> Players;
+	
 	for (int32 i = 0; i < 6; i++)
 	{
 		FPlayerInfo info = 
 		{
 			.id = FString::Printf(TEXT("Test%d"), i),
-			.liar = i < 1 ? true : false,
+			.liar = i < 1,
 			.order = i + 1
 		};
 		
-		PlayerList.Add(info);
+		Players.Add(info);
 	}
 	
-	SortPlayer();
-	InitPlayer();
-	InitKeyword();
-	ShowKeyword();
+	TestInfo.players = Players;
+	TestInfo.common_keyword = TEXT("딸기");
+	TestInfo.lair_keyword = TEXT("바나나");
+
+	GameStart();
 }
 
-void ALiarGameState::Multicast_Round_Implementation()
+void ALiarGameState::GameStart()
 {
-	for (int curOrder = 1; curOrder < PlayerStates.Num() + 1; curOrder++)
-	{
-		CollectAnswers(curOrder);
-	}
-}
+	// TODO: ChatManager에게 게임의 정보를 요청하자
 
-void ALiarGameState::SortPlayer()
-{
-	//UE_LOG(LogTemp,Warning,TEXT("플레이어 정렬"));
-	
-	// PlayerList.Sort([](const FPlayerInfo& A, const FPlayerInfo& B)
-	// {
-	// 	return A.order < B.order;
-	// });
-	
-	PlayerStates.Sort([](const APlayerState& A, const APlayerState& B)
+	// 받은 데이터를 가지고 매니저 initialize하자
+	// 라운드 시작하자 -> 1번째부터 시작!
+
+	// TODO: 임시 테스트.. 나중에 수정할 것
+	TestInfo.players.Sort([](const FPlayerInfo& A, const FPlayerInfo& B)
 	{
-		return A.GetPlayerId() < B.GetPlayerId();
+		return A.order < B.order;
 	});
+	
+	for (int32 i = 0; i < TestInfo.players.Num(); i++)
+	{
+		PlayerList.Add(TestInfo.players[i]);
+	}
+	
+	InitPlayer();
+	InitKeyword(TestInfo.common_keyword, TestInfo.lair_keyword);
+	ShowKeyword();
+	Round();
+}
+
+void ALiarGameState::Round()
+{
+	++CurRound;
+	CurrentOrder = 0;
+	
+	// order에 해당하는 Player를 향해 카메라를 돌린다
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *PlayerList[CurrentOrder].id);
 }
 
 void ALiarGameState::InitPlayer()
@@ -99,81 +95,60 @@ void ALiarGameState::InitPlayer()
 		return;
 	}
 
-	if (PlayerStates.IsEmpty())
+	ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
+	ALiarGameWithAICharacter* MyPlayer = Cast<ALiarGameWithAICharacter>(My);
+
+	for (int i = 0; i < PlayerList.Num(); i++)
 	{
-		UE_LOG(LogTemp,Error,TEXT("플레이어 스테이트 Empty"));
-	}
+		// playerList 아이디가 자신의 아이디와 같다면 PlayerController의 Pawn을 의자에 앉히자.
+
+		FPlayerInfo info = PlayerList[i];
+
+		if (MyPlayer->UserId == info.id)
+		{
+			IamLiar = info.liar;
+			MyPlayer->SetActorTransform(Chairs[i]->SitPosition->GetComponentTransform());
+			continue;
+		}
 	
-	//TODO: 플레이어 Json 정보 받아서 정렬.
-	for (int i = 0; i < PlayerStates.Num(); i++)
-	{
-		PlayerStates[i]->playerInfo = PlayerList[i];
+		Chairs[i]->SpawnPlayer(info.id, info.order, info.liar);
 	}
-
-	for (int i = 0; i < PlayerStates.Num(); i++)
-	{
-		PlayerStates[i]->GetPawn()->SetActorLocation(Chairs[i]->SitPosition->GetComponentLocation());
-		PlayerStates[i]->GetPawn()->SetActorRotation(Chairs[i]->SitPosition->GetComponentRotation());
-	}
-
-	// for (int i = 0; i < PlayerList.Num(); i++)
-	// {
-	// 	// TODO: playerList 아이디가 자신의 아이디와 같다면 PlayerController의 Pawn을 의자에 앉히자.
-	// 	
-	// 	FPlayerInfo info = PlayerList[i];
-	//
-	// 	Chairs[i]->SpawnPlayer(info.id, info.order, info.liar);
-	// }
 }
 
-void ALiarGameState::InitKeyword()
+void ALiarGameState::InitKeyword(FString common, FString lair)
 {
-	//TODO: json의 키워드 정보 받아오기
-	
-	for (int i = 0; i < PlayerStates.Num(); i++)
-	{
-		if (PlayerStates[i]->playerInfo.liar)
-		{
-			PlayerStates[i]->Keyword = liar_keyword;
-		}
-		else
-		{
-			PlayerStates[i]->Keyword = common_keyword;
-		}
-	}
+	CommonKeyword = common;
+	LairKeyword = lair;
 }
 
 void ALiarGameState::ShowKeyword()
 {
-	APlayerController* localCon = GetWorld()->GetFirstPlayerController();
-	if (localCon && localCon->IsLocalController())
-	{
-		ALiarPlayerState* localState = Cast<ALiarPlayerState>(localCon->PlayerState);
-		if (localState)
-		{
-			FString Msg = FString::Printf(TEXT("내 키워드: %s"), *localState->Keyword);
-			ScreenLog(Msg);
-		}
-	}
+	// 나의 아이디를 가지고 PlayerList에서 정보를 찾는다
+	// 내가 라이어이면 라이어키워드를 출력
+
+	FString value = IamLiar? LairKeyword : CommonKeyword;
+
+	FString Msg = FString::Printf(TEXT("내 키워드: %s"), *value);
+	ScreenLog(Msg);
 }
 
 void ALiarGameState::CollectAnswers(int order)
 {
-	APlayerController* localCon = GetWorld()->GetFirstPlayerController();
-	if (localCon && localCon->IsLocalController())
-	{
-		ALiarPlayerState* localState = Cast<ALiarPlayerState>(localCon->PlayerState);
-		if (localState->playerInfo.order == order)
-		{
-			ScreenLog("Type short explanation of the keyword");
-			InputAnswer();
-		}
-		else
-		{
-			ScreenLog("Waiting for Others Answer...");
-			WaitingOthersAnswer();
-		}
-	}
+	// APlayerController* localCon = GetWorld()->GetFirstPlayerController();
+	// if (localCon && localCon->IsLocalController())
+	// {
+	// 	ALiarPlayerState* localState = Cast<ALiarPlayerState>(localCon->PlayerState);
+	// 	if (localState->playerInfo.order == order)
+	// 	{
+	// 		ScreenLog("Type short explanation of the keyword");
+	// 		InputAnswer();
+	// 	}
+	// 	else
+	// 	{
+	// 		ScreenLog("Waiting for Others Answer...");
+	// 		WaitingOthersAnswer();
+	// 	}
+	// }
 }
 
 void ALiarGameState::InputAnswer()
