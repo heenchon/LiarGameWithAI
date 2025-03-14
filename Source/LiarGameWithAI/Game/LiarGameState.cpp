@@ -83,6 +83,10 @@ void ALiarGameState::Round()
 	if (CurRound == 2)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("게임 끝!"));
+		CurrentOrder = 0;
+		CurRound = 0;
+		
+		VotingStart();
 		return;
 	}
 	
@@ -199,6 +203,52 @@ void ALiarGameState::WaitingOthersAnswer()
 {
 	//TODO: 다른 플레이어가 연관어 말했는지 확인하기
 	ScreenLog("Waiting for Others Answer...");
+}
+
+void ALiarGameState::VotingStart()
+{
+	CameraActor->SetActorLocation(FVector(0,0,0));
+	CameraActor->SetActorRotation(FRotator(0,-90,0));
+	CollectVotes();
+}
+
+void ALiarGameState::CollectVotes()
+{
+	++CurrentOrder;
+	if (CurrentOrder == 6)
+	{
+		ScreenLog("투표 끝!");
+		VotingEnd();
+		return;
+	}
+	
+	ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
+	ALiarGameWithAICharacter* MyPlayer = Cast<ALiarGameWithAICharacter>(My);
+	
+	if (MyPlayer->UserId == PlayerList[CurrentOrder].id)
+	{
+		Vote();
+	}
+	else
+	{
+		WaitingOthersVote();
+	}
+}
+
+void ALiarGameState::Vote()
+{
+	//TODO: 투표하기
+}
+
+void ALiarGameState::WaitingOthersVote()
+{
+	//TODO: 다른 사람 투표 입력 기다리기
+}
+
+void ALiarGameState::VotingEnd()
+{
+	//TODO: 뽑힌 플레이어 정보 가져오기
+	//UE_LOG(LogTemp,Warning,TEXT("뽑힌 플레이어: %s"), *);
 }
 
 void ALiarGameState::ScreenLog(const FString& string)
