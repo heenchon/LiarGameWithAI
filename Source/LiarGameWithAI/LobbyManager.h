@@ -36,6 +36,10 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	class UGamePlayerWidget* StartWidget;
 
+	FString MyUserId;
+	
+	TArray<FString> Players;
+
 	UPROPERTY()
 
 	class AChatManager* ChatManager;

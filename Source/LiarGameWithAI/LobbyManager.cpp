@@ -4,6 +4,7 @@
 #include "LobbyManager.h"
 
 #include "EngineUtils.h"
+#include "LiarGameWithAICharacter.h"
 #include "ChatManager/Public/ChatManager.h"
 
 // Sets default values
@@ -49,6 +50,33 @@ void ALobbyManager::EnterLobby()
 
 void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 {
+	// loadingui를 가리자
+
+	
+	// 지급 받은 내아이디 캐싱
+	MyUserId = LobbyData.UserID;
+
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (ALiarGameWithAICharacter* Player = Cast<ALiarGameWithAICharacter>( PlayerController->GetCharacter()))
+	{
+		Player->SetUserId(MyUserId, true);
+	}
+
+	if (LobbyData.Room.Num() > 1)
+	{
+		for (int32 i = 0; i < LobbyData.Room.Num(); i++)
+		{
+			if (LobbyData.Room[i] == MyUserId)
+			{
+				continue;
+			}
+			// 플레이어 소환
+			//LobbyData.Room[i];
+			
+			//Players.setuserid
+		}
+	}
+	
 	// 플레이어들을 받아서
 	// 필드에 소환
 }
