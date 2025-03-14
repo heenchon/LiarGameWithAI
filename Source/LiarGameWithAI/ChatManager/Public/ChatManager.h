@@ -203,13 +203,13 @@ public:
 	UFUNCTION(Server, Reliable)
 	void GameStart();
 
-	// 서버에게 채팅 내용 보내기
+	/*// 서버에게 채팅 내용 보내기
 	UFUNCTION(Server, Reliable)
 	void ServerRPC_SendChat(const FString& userId, const FString& chat);
 	
 	// 모든 클라이언트에게 채팅 내용 보내기
 	UFUNCTION(NetMulticast, Reliable)
-	void NetMulticast_SendChat(const FString& userId, const FString& chat);
+	void NetMulticast_SendChat(const FString& userId, const FString& chat);*/
 
 	// AI에게 채팅 내용 전달 (Json으로 바꾸자)
 	void SendChatToAI(const FString& userId, const FString& chat);

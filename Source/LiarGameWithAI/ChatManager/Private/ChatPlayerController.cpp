@@ -4,7 +4,9 @@
 #include "LiarGameWithAI/ChatManager/Public/ChatPlayerController.h"
 
 #include "Components/ScrollBox.h"
+#include "Kismet/GameplayStatics.h"
 #include "LiarGameWithAI/ChatManager/Public/ChatPanelUI.h"
+#include "LiarGameWithAI/GamePlayerWidget/GamePlayerName.h"
 
 void AChatPlayerController::BeginPlay()
 {
@@ -14,7 +16,10 @@ void AChatPlayerController::BeginPlay()
 	{
 		chatPanel = CreateWidget<UChatPanelUI>(this, UChatPanelUIClass);
 		chatPanel->SetOwningPlayer(this);
+		chatPanel->AddToViewport();
 	}
+
+	ChatManager = Cast<AChatManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AChatManager::StaticClass()));
 		
 }
 
@@ -30,3 +35,7 @@ void AChatPlayerController::Tick(float DeltaTime)
 		}
 	}
 }
+
+
+
+
