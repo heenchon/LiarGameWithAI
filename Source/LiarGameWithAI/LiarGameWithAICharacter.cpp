@@ -10,7 +10,13 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "Game/LiarGameState.h"
+#include "Blueprint/UserWidget.h"
+#include "Camera/CameraActor.h"
+#include "Components/WidgetComponent.h"
+#include "GameFramework/PlayerState.h"
+#include "GamePlayerWidget/GamePlayerName.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -45,17 +51,19 @@ ALiarGameWithAICharacter::ALiarGameWithAICharacter()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 
-	// Create a camera boom (pulls in towards the player if there is a collision)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	// // Create a camera boom (pulls in towards the player if there is a collision)
+	// CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	// CameraBoom->SetupAttachment(RootComponent);
+	// CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
+	// CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	//
+	// // Create a follow camera
+	// FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
+	// FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	// FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Create a follow camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
+	GamePlayerName = CreateDefaultSubobject<UWidgetComponent>(TEXT("GamePlayerName"));
+	GamePlayerName->SetupAttachment(RootComponent);
 	
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -79,17 +87,38 @@ void ALiarGameWithAICharacter::NotifyControllerChanged()
 	}
 }
 
+void ALiarGameWithAICharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Anim = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+
+	// TODO: Test code 서버 통신 작업시 지울 것
+	SetUserId(TEXT("Test0"), true);
+}
+
+void ALiarGameWithAICharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	
+	//SetWidgetNameRot();
+	// if (GetWorld()->GetFirstPlayerController()->WasInputKeyJustPressed(EKeys::R))
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::Tick"));
+	// }
+}
+
 void ALiarGameWithAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		// EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		// Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ALiarGameWithAICharacter::Move);
+		// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ALiarGameWithAICharacter::Move);
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ALiarGameWithAICharacter::Look);
@@ -97,6 +126,62 @@ void ALiarGameWithAICharacter::SetupPlayerInputComponent(UInputComponent* Player
 	else
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+	}
+}
+
+void ALiarGameWithAICharacter::SetWidgetNameRot()
+{
+	// APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	// int32 PlayerIndex = UGameplayStatics::GetPlayerControllerID(PlayerController);
+	// if (PlayerIndex < 0)
+	// {
+	// 	UE_LOG(LogTemp, Error, TEXT("Invalid PlayerIndex: %d"), PlayerIndex);
+	// 	return;
+	// }
+	// // PlayerIndex 번째 플레이어의 카메라 가져오기
+	// APlayerCameraManager* CamManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	// if (!CamManager)
+	// {
+	// 	UE_LOG(LogTemp, Error, TEXT("CameraManager is nullptr for PlayerIndex: %d"), 0);
+	// 	return;
+	// }
+	// APlayerController* Character =Cast<APlayerController>(this->GetController()); 
+	// int32 Index = Character->NetPlayerIndex;
+	
+	// AActor* cam = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	// 카메라의 앞방향(반대), 윗방향을 이용해서 Rotator 를 구하자.
+
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		ACameraActor* cam = Cast<ACameraActor>(PC->GetViewTarget());
+		FRotator rot = UKismetMathLibrary::MakeRotFromXZ(-cam->GetActorForwardVector(), cam->GetActorUpVector());
+		// compHP 를 구한  Rotator 값으로 설정.
+		GamePlayerName->SetWorldRotation(rot);
+	}
+	// UE_LOG(LogTemp,Warning,TEXT("PlayerIndex%d"),Index);
+}
+
+void ALiarGameWithAICharacter::SetUserId(FString userId, bool mine)
+{
+	UserId = userId;
+
+	UGamePlayerName* NameUI = Cast<UGamePlayerName>(GamePlayerName->GetWidget());
+
+	if (NameUI)
+	{
+		NameUI->PlayerName->SetText(FText::FromString(UserId));
+		
+		if (mine)
+		{
+			FSlateColor Col(FLinearColor::Yellow);
+			NameUI->PlayerName->SetColorAndOpacity(Col);
+		}
+		else
+		{
+			FSlateColor Col(FLinearColor::White);
+			NameUI->PlayerName->SetColorAndOpacity(Col);
+		}
 	}
 }
 
@@ -133,5 +218,13 @@ void ALiarGameWithAICharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ALiarGameWithAICharacter::SetSitAnim()
+{
+	if (Anim)
+	{
+		Anim->bSitting = true;
 	}
 }

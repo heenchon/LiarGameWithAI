@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "LiarGameWithAICharacter.generated.h"
@@ -21,7 +22,8 @@ class ALiarGameWithAICharacter : public ACharacter
 	GENERATED_BODY()
 
 	// LiarCharacter설정값
-
+	
+	
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -49,6 +51,19 @@ class ALiarGameWithAICharacter : public ACharacter
 public:
 	ALiarGameWithAICharacter();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	TSubclassOf<class UGamePlayerName> PlayerNameFactory;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	class UWidgetComponent* GamePlayerName;
+
+	FString UserId;
+
+	UPROPERTY()
+	UPlayerAnimInstance* Anim;
+
+	void SetSitAnim();
+	
 protected:
 
 	/** Called for movement input */
@@ -56,18 +71,26 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-			
+
 
 protected:
 
 	virtual void NotifyControllerChanged() override;
 
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	// /** Returns CameraBoom subobject **/
+	// FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	// /** Returns FollowCamera subobject **/
+	// FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	void SetWidgetNameRot();
+
+	void SetUserId(FString userId, bool mine = false);
 };
 

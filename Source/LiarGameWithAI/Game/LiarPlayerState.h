@@ -11,17 +11,20 @@
  * 
  */
 
-
 UCLASS()
 class LIARGAMEWITHAI_API ALiarPlayerState : public APlayerState
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(Replicated, BlueprintReadOnly, Category="Info")
+	UPROPERTY(Replicated, VisibleAnywhere, Category="Info")
 	FPlayerInfo playerInfo;
+
+	UPROPERTY(Replicated, VisibleAnywhere)
+	FString Keyword;
 
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 };
