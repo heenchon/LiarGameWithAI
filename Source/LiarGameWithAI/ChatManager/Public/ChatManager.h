@@ -199,7 +199,9 @@ public:
 	void DevClear();
 	UFUNCTION(Server, Reliable)
 	void StartCheck();
-	
+
+	UFUNCTION(Server, Reliable)
+	void GameStart();
 
 	// 서버에게 채팅 내용 보내기
 	UFUNCTION(Server, Reliable)

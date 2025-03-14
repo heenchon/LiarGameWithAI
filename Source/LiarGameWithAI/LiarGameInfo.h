@@ -26,10 +26,8 @@ struct FGameInfo
 public:
 	UPROPERTY()
 	TArray<FPlayerInfo> players;
-
 	UPROPERTY()
 	FString common_keyword;
-
 	UPROPERTY()
 	FString lair_keyword;
 };
