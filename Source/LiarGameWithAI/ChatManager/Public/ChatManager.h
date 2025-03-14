@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ChatManager.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FUserChatInfo
 {
 	GENERATED_BODY()
@@ -17,14 +17,32 @@ public:
 	FString chat;
 };
 
-/*USTRUCT()
-struct FUserChatInfoArray
+USTRUCT(BlueprintType)
+struct FLobbyResponse
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	FString UserID;
+
+	UPROPERTY()
+	TArray<FString> Room;
+
+	UPROPERTY()
+	FString Host;
+
+	UPROPERTY()
+	bool Start;
+};
+
+USTRUCT(BlueprintType)
+struct FKeywordResponse
 {
 	GENERATED_BODY()
 public:
 	UPROPERTY()
-	TArray<FUserChatInfo> chats;
-};*/
+	FString message;
+};
 
 UCLASS()
 class LIARGAMEWITHAI_API AChatManager : public AActor
@@ -42,6 +60,25 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(Server, Reliable)
+	void EnterLobby();
+	UFUNCTION(Server, Reliable)
+	void LobbyCheck();
+	UFUNCTION(Server, Reliable)
+	void SendKeywords(const FString& NormalKeyword, const FString& LiarKeyword);
+	/*UFUNCTION(Server, Reliable)
+	void RecieveKeywords();
+	UFUNCTION(Server, Reliable)
+	void IsSentence();
+	UFUNCTION(Server, Reliable)
+	void ReceiveAIGenerateWord();
+	UFUNCTION(Server, Reliable)
+	void VotePlayer();
+	UFUNCTION(Server, Reliable)
+	void CheckAIAnswer();
+	UFUNCTION(Server, Reliable)
+	void GameState();*/
 
 	// 서버에게 채팅 내용 보내기
 	UFUNCTION(Server, Reliable)
