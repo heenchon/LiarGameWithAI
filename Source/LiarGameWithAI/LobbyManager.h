@@ -30,6 +30,10 @@ public:
 	
 	void EnterLobbyCompleted(const FLobbyResponse& LobbyData);
 
+	void LobbyCheckCompleted(const FLobbyResponse& LobbyData);
+
+	void StartCheckCompleted(const struct FGameInfo& GameData);
+
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TSubclassOf<class UGamePlayerWidget> WidgetPlayFactory;
 
@@ -40,10 +44,14 @@ public:
 	class UGamePlayerWidget* StartWidget;
 
 	FString MyUserId;
+
+	bool bIamHost;
 	
 	TArray<FString> Players;
 
 	UPROPERTY()
-
 	class AChatManager* ChatManager;
+
+	FTimerHandle LobbyCheckTimerHandle;
+	FTimerHandle StartCheckTimerHandle;
 };

@@ -6,6 +6,7 @@
 #include "EngineUtils.h"
 #include "LiarGameWithAICharacter.h"
 #include "ChatManager/Public/ChatManager.h"
+#include "LiarGameWithAI/LiarGameInfo.h"
 
 // Sets default values
 ALobbyManager::ALobbyManager()
@@ -73,6 +74,8 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 	// 	Player->SetActorRotation(MiRot);
 	// }
 	
+	bIamHost = LobbyData.is_host;
+	
 	if (LobbyData.room.Num() > 1)
 	{
 		for (int32 i = 0; i < LobbyData.room.Num(); i++)
@@ -94,10 +97,67 @@ void ALobbyManager::EnterLobbyCompleted(const FLobbyResponse& LobbyData)
 			CharacterFactory, RotLocation, MiRot);
 			Player->SetActorRotation(MiRot);
 			Player->SetUserId(LobbyData.room[i], false);
+			Players.Add(LobbyData.room[i]);
 		}
 	}
 	
-	// 플레이어들을 받아서
-	// 필드에 소환
+	GetWorld()->
+	GetTimerManager()
+	.SetTimer(
+		LobbyCheckTimerHandle,
+		[this] ()
+		{
+			ChatManager->LobbyCheck();
+		},
+		0.25f,
+		true
+	);
+
+	if (LobbyData.is_host)
+	{
+		ChatManager->SendKeywords(TEXT("고양이"), TEXT("호랑이"));
+	}
+	else
+	{
+		GetWorld()->
+		GetTimerManager()
+		.SetTimer(
+			StartCheckTimerHandle,
+			[this] ()
+			{
+				ChatManager->StartCheck();
+			},
+			0.25f,
+			true
+		);
+	}
+}
+
+void ALobbyManager::LobbyCheckCompleted(const FLobbyResponse& LobbyData)
+{
+	if (LobbyData.room.Num() > 1)
+	{
+		for (int32 i = 0; i < LobbyData.room.Num(); i++)
+		{
+			if (Players.Find(LobbyData.room[i]))
+			{
+				continue;
+			}
+			// 플레이어 소환
+			//LobbyData.Room[i];
+			FRotator rot = FRotator(0,i*60,0);
+			FRotator MiRot = rot + FRotator(0,180,0);
+			FVector RotLocation = GetActorLocation() + rot.Vector()*500;
+			ALiarGameWithAICharacter* Player = GetWorld()->SpawnActor<ALiarGameWithAICharacter>(
+			CharacterFactory, RotLocation, MiRot);
+			Player->SetActorRotation(MiRot);
+			Player->SetUserId(LobbyData.room[i], false);
+			Players.Add(LobbyData.room[i]);
+		}
+	}
+}
+
+void ALobbyManager::StartCheckCompleted(const FGameInfo& GameData)
+{
 }
 
