@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Blueprint/UserWidget.h"
+#include "Camera/CameraActor.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/PlayerState.h"
 #include "GamePlayerWidget/GamePlayerName.h"
@@ -90,6 +91,8 @@ void ALiarGameWithAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Anim = Cast<UPlayerAnimInstance>(GetMesh()->GetAnimInstance());
+
 	// TODO: Test code 서버 통신 작업시 지울 것
 	SetUserId(TEXT("Test0"), true);
 }
@@ -98,7 +101,7 @@ void ALiarGameWithAICharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	SetWidgetNameRot();
+	//SetWidgetNameRot();
 	// if (GetWorld()->GetFirstPlayerController()->WasInputKeyJustPressed(EKeys::R))
 	// {
 	// 	UE_LOG(LogTemp, Warning, TEXT("ALobbyManager::Tick"));
@@ -128,28 +131,34 @@ void ALiarGameWithAICharacter::SetupPlayerInputComponent(UInputComponent* Player
 
 void ALiarGameWithAICharacter::SetWidgetNameRot()
 {
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
-	int32 PlayerIndex = UGameplayStatics::GetPlayerControllerID(PlayerController);
-	if (PlayerIndex < 0)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Invalid PlayerIndex: %d"), PlayerIndex);
-		return;
-	}
-	// PlayerIndex 번째 플레이어의 카메라 가져오기
-	APlayerCameraManager* CamManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
-	if (!CamManager)
-	{
-		UE_LOG(LogTemp, Error, TEXT("CameraManager is nullptr for PlayerIndex: %d"), 0);
-		return;
-	}
+	// APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	// int32 PlayerIndex = UGameplayStatics::GetPlayerControllerID(PlayerController);
+	// if (PlayerIndex < 0)
+	// {
+	// 	UE_LOG(LogTemp, Error, TEXT("Invalid PlayerIndex: %d"), PlayerIndex);
+	// 	return;
+	// }
+	// // PlayerIndex 번째 플레이어의 카메라 가져오기
+	// APlayerCameraManager* CamManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	// if (!CamManager)
+	// {
+	// 	UE_LOG(LogTemp, Error, TEXT("CameraManager is nullptr for PlayerIndex: %d"), 0);
+	// 	return;
+	// }
 	// APlayerController* Character =Cast<APlayerController>(this->GetController()); 
 	// int32 Index = Character->NetPlayerIndex;
 	
-	AActor* cam = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	// AActor* cam = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	// 카메라의 앞방향(반대), 윗방향을 이용해서 Rotator 를 구하자.
-	FRotator rot = UKismetMathLibrary::MakeRotFromXZ(-cam->GetActorForwardVector(), cam->GetActorUpVector());
-	// compHP 를 구한  Rotator 값으로 설정.
-	GamePlayerName->SetWorldRotation(rot);
+
+	APlayerController* PC = GetWorld()->GetFirstPlayerController();
+	if (PC)
+	{
+		ACameraActor* cam = Cast<ACameraActor>(PC->GetViewTarget());
+		FRotator rot = UKismetMathLibrary::MakeRotFromXZ(-cam->GetActorForwardVector(), cam->GetActorUpVector());
+		// compHP 를 구한  Rotator 값으로 설정.
+		GamePlayerName->SetWorldRotation(rot);
+	}
 	// UE_LOG(LogTemp,Warning,TEXT("PlayerIndex%d"),Index);
 }
 
@@ -209,5 +218,13 @@ void ALiarGameWithAICharacter::Look(const FInputActionValue& Value)
 		// add yaw and pitch input to controller
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ALiarGameWithAICharacter::SetSitAnim()
+{
+	if (Anim)
+	{
+		Anim->bSitting = true;
 	}
 }
