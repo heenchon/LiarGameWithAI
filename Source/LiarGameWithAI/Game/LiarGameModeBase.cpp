@@ -5,11 +5,31 @@
 
 #include "LiarGameState.h"
 #include "LiarPlayerState.h"
+#include "Kismet/GameplayStatics.h"
+#include "LiarGameWithAI/LairGameInstance.h"
 
 ALiarGameModeBase::ALiarGameModeBase()
 {
 	GameStateClass = ALiarGameState::StaticClass();
 	PlayerStateClass = ALiarPlayerState::StaticClass();
+}
+
+void ALiarGameModeBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("GameMap"))
+	{
+		ALiarGameState* MyGameState = GetGameState<ALiarGameState>();
+		if (MyGameState)
+		{
+			ULairGameInstance* GameInstance = Cast<ULairGameInstance>(GetGameInstance());
+			if (GameInstance)
+			{
+				MyGameState->Initialize(GameInstance->GameInfo);
+			}
+		}
+	}
 }
 
 void ALiarGameModeBase::PostLogin(APlayerController* NewPlayer)

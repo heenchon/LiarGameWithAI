@@ -24,7 +24,7 @@ public:
 	UPROPERTY()
 	AChatManager* ChatManager;
 
-	FGameInfo TestInfo;
+	// FGameInfo TestInfo;
 	
 	TArray<FPlayerInfo> PlayerList;
 
@@ -68,6 +68,8 @@ private:
 	void ScreenLog(const FString& string);
 	
 public:
+	void Initialize(FGameInfo info);
+	
 	UFUNCTION(Exec)
 	void LiarTest();
 	UFUNCTION(Exec)

@@ -4,8 +4,10 @@
 #include "LobbyManager.h"
 
 #include "EngineUtils.h"
+#include "LairGameInstance.h"
 #include "LiarGameWithAICharacter.h"
 #include "ChatManager/Public/ChatManager.h"
+#include "Kismet/GameplayStatics.h"
 #include "LiarGameWithAI/LiarGameInfo.h"
 
 // Sets default values
@@ -159,5 +161,28 @@ void ALobbyManager::LobbyCheckCompleted(const FLobbyResponse& LobbyData)
 
 void ALobbyManager::StartCheckCompleted(const FGameInfo& GameData)
 {
+	ULairGameInstance* GameInstance = Cast<ULairGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->GameInfo = GameData;
+	}
+
+	UGameplayStatics::OpenLevel(GetWorld(), FName("GameMap"));
 }
+
+void ALobbyManager::StartGame()
+{
+}
+
+void ALobbyManager::StartGameCompleted(const FGameInfo& GameData)
+{
+	ULairGameInstance* GameInstance = Cast<ULairGameInstance>(GetGameInstance());
+	if (GameInstance)
+	{
+		GameInstance->GameInfo = GameData;
+	}
+
+	UGameplayStatics::OpenLevel(GetWorld(), FName("GameMap"));
+}
+
 

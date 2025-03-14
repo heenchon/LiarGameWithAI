@@ -27,12 +27,16 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void EnterLobby();
+
+	void StartGame();
 	
 	void EnterLobbyCompleted(const FLobbyResponse& LobbyData);
 
 	void LobbyCheckCompleted(const FLobbyResponse& LobbyData);
 
 	void StartCheckCompleted(const struct FGameInfo& GameData);
+
+	void StartGameCompleted(const struct FGameInfo& GameData);
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	TSubclassOf<class UGamePlayerWidget> WidgetPlayFactory;

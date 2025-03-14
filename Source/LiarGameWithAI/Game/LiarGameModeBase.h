@@ -20,6 +20,8 @@ class LIARGAMEWITHAI_API ALiarGameModeBase : public AGameMode
 public:
 	ALiarGameModeBase();
 
+	virtual void BeginPlay() override;
+
 private:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
