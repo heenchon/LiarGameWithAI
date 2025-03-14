@@ -543,13 +543,13 @@ void AChatManager::StartCheck_Implementation()
 		if (bProcessedSuccessfully)
 		{
 			FString ResponseContent = Response->GetContentAsString();
-			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
+			UE_LOG(LogTemp, Log, TEXT("Start Check 응답: %s"), *ResponseContent);
 			FGameInfo GameData;
 			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &GameData, 0, 0);
 
-			if (LobbyManager)
+			if (LobbyManager && GameData.players.Num() > 0)
 			{
-				LobbyManager->StartGameCompleted(GameData);
+				LobbyManager->StartCheckCompleted(GameData);
 			}
 		}
 		else
@@ -558,6 +558,9 @@ void AChatManager::StartCheck_Implementation()
 			// 게임 시작 전 로직 처리
 		}
 	});
+
+	// 요청을 보내자
+	httpRequest->ProcessRequest();
 }
 
 void AChatManager::GameStart_Implementation()
