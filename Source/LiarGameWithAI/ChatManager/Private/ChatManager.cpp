@@ -655,8 +655,6 @@ void AChatManager::GameStart_Implementation()
 			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
 			FGameInfo GameData;
 			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &GameData, 0, 0);
-
-			// LobbyManager->EnterLobbyCompleted(LobbyData);
 		}
 		// 실패
 		else
