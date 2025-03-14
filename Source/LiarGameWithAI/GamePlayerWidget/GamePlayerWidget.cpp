@@ -18,6 +18,8 @@ void UGamePlayerWidget::NativeConstruct()
 	{
 		PlayerStart->OnClicked.AddDynamic(this, &UGamePlayerWidget::OnPlayerStartClicked);
 	}
+
+	
 }
 
 void UGamePlayerWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -43,7 +45,7 @@ void UGamePlayerWidget::OnPlayerStartClicked()
 {
 	MainPanel->SetVisibility(ESlateVisibility::Visible);
 	PlayerStart->SetVisibility(ESlateVisibility::Hidden);
-	GetLoadPlayer();
+	//GetLoadPlayer();
 	
 	// this->RemoveFromViewport();
 }
