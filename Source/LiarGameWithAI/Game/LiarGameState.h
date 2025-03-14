@@ -48,21 +48,28 @@ protected:
 private:
 	UFUNCTION()
 	void GameStart();
-	UFUNCTION()
-	void Round();
 	
 	UFUNCTION()
 	void InitPlayer();
 	void InitKeyword(FString common, FString liar);
 	void ShowKeyword();
-
+	
+	void UpdateCameraByOrder(int order);
 	void CollectAnswers(int order);
 	void InputAnswer();
 	void WaitingOthersAnswer();
+
+	void VotingStart();
+	void CollectVotes();
+	void Vote();
+	void WaitingOthersVote();
+	void VotingEnd();
 	
 	void ScreenLog(const FString& string);
 	
 public:
 	UFUNCTION(Exec)
 	void LiarTest();
+	UFUNCTION(Exec)
+	void Round();
 };

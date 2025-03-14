@@ -13,5 +13,8 @@ UCLASS()
 class LIARGAMEWITHAI_API UPlayerAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-	
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bSitting = false;
 };

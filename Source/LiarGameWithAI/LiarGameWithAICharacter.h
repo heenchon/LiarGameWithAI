@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerAnimInstance.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "LiarGameWithAICharacter.generated.h"
@@ -58,6 +59,11 @@ public:
 
 	FString UserId;
 
+	UPROPERTY()
+	UPlayerAnimInstance* Anim;
+
+	void SetSitAnim();
+	
 protected:
 
 	/** Called for movement input */
@@ -65,7 +71,7 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-			
+
 
 protected:
 
