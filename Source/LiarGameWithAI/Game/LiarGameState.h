@@ -48,8 +48,8 @@ protected:
 private:
 	UFUNCTION()
 	void GameStart();
-	UFUNCTION()
-	void Round();
+	
+	void UpdateCameraByOrder(int order);
 	
 	UFUNCTION()
 	void InitPlayer();
@@ -65,4 +65,6 @@ private:
 public:
 	UFUNCTION(Exec)
 	void LiarTest();
+	UFUNCTION(Exec)
+	void Round();
 };
