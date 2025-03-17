@@ -413,7 +413,9 @@ void AChatManager::CheckAIAnswer_Implementation()
 			FString ResponseContent = Response->GetContentAsString();
 			UE_LOG(LogTemp, Log, TEXT("응답: %s"), *ResponseContent);
 			FCheckAIAnswer AIAnswer;
-			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &AIAnswer, 0, 0);		
+			FJsonObjectConverter::JsonObjectStringToUStruct(ResponseContent, &AIAnswer, 0, 0);
+			// TODO: AI답변을 UI에 출력하는법?
+			
 		}
 		// 실패
 		else
@@ -600,48 +602,3 @@ void AChatManager::GameStart_Implementation()
 	httpRequest->ProcessRequest();
 }
 
-/*
-// AI에게 채팅 내용 전달
-void AChatManager::SendChatToAI(const FString& userId, const FString& chat)
-{
-	// 서버에게 요청하는 객체 만들자
-	FHttpRequestRef httpRequest = FHttpModule::Get().CreateRequest();
-	// 요청 URL - 서버가 알려줌
-	httpRequest->SetURL(TEXT("http://192.168.20.118:8088/"));
-	// TODO: 물어봐야함
-	httpRequest->SetVerb(TEXT("POST"));
-	httpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json"));
-
-	// 서버에게 보내고 싶은 데이터 값 (Json)
-	FUserChatInfo info;
-	// TODO: 여기 설정해주기 (연동필요)
-	info.userId = userId;
-	info.chat = chat;
-	FString jsonString;
-	FJsonObjectConverter::UStructToJsonObjectString(info, jsonString);
-	// POST요청일때임 / GET
-	httpRequest->SetContentAsString(jsonString);
-	
-	// 서버에게 요청을 한 후 응답이 오면 호출되는 함수 등록
-	httpRequest->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bProcessedSuccessfully)
-	{
-		// 응답이 오면 실행됨
-		// 성공
-		if (bProcessedSuccessfully)
-		{
-			// 변수를 받고 (AI차례라면?)
-			// AI한테 받은값 출력
-			// Response (Json)이걸 스트럭트로 바꿔
-		}
-		// 실패
-		else
-		{
-			UE_LOG(LogTemp,Warning,TEXT("통신실패: %d"), Response->GetResponseCode());
-			return;
-		}
-	});
-	
-	// 요청을 보내자
-	httpRequest->ProcessRequest();
-}
-*/

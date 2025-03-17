@@ -53,7 +53,11 @@ void UChatPanelUI::OnTextCommitted(const FText& InText, ETextCommit::Type Commit
 			
 			if (GamePlayerState)
 			{
-				ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
+				FString PlayerName = GamePlayerState->GetPlayerName();
+				GamePlayerState->ServerRPC_SendChat(PlayerName, InText.ToString());
+				// 텍스트창 비우기
+				ChatInputBox->SetText(FText::GetEmpty());
+				/*ACharacter* My = GetWorld()->GetFirstPlayerController()->GetCharacter();
 				ALiarGameWithAICharacter* MyPlayer = Cast<ALiarGameWithAICharacter>(My);
 				if (MyPlayer)
 				{
@@ -61,7 +65,7 @@ void UChatPanelUI::OnTextCommitted(const FText& InText, ETextCommit::Type Commit
 					GamePlayerState->ServerRPC_SendChat(PlayerName, InText.ToString());
 					// 텍스트창 비우기
 					ChatInputBox->SetText(FText::GetEmpty());
-				}
+				}*/
 			}
 		}
 	}

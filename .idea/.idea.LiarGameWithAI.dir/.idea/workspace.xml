@@ -11,8 +11,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.LiarGameWithAI.dir/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatManager.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatManager.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPanelUI.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Private/ChatPanelUI.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/ChatManager/Public/ChatManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarGameState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/LiarGameWithAI/Game/LiarGameState.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
